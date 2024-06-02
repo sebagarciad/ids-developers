@@ -3,12 +3,26 @@ from flask import Flask, render_template, request, redirect, url_for
 app = Flask(__name__)
 
 
+
 #Renderiza home
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
+    if request.method == "POST":
+        desde = request.form.get("desde")
+        hasta = request.form.get("hasta")
+        fecha = request.form.get("fecha")
+        adultos = request.form.get("adultos")
+        print(f"desde es = {desde}" )
+        return redirect(url_for("prueba", desde=desde, hasta=hasta, fecha=fecha, adultos=adultos))
     return render_template('index.html')
 
-
+@app.route("/prueba")
+def prueba():
+    desde = request.args.get("desde", None)
+    hasta = request.args.get("hasta", None)
+    fecha = request.args.get("fecha", None)
+    adultos = request.args.get("adultos", None)
+    return render_template("prueba.html", desde=desde, hasta=hasta, fecha=fecha, adultos=adultos)
 
 '''@app.errorhandler(404)
 def page_not_found(e):
