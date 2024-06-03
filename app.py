@@ -28,6 +28,10 @@ def prueba():
 def info_usuario():
     return render_template('informacion-usuario.html')
 
+@app.route("/resultados-de-busqueda")
+def resultados_busqueda():
+    return render_template('resultados-de-busqueda.html')
+
 
 '''@app.errorhandler(404)
 def page_not_found(e):
