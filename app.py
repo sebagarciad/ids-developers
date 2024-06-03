@@ -24,8 +24,14 @@ def prueba():
     adultos = request.args.get("adultos", None)
     return render_template("prueba.html", desde=desde, hasta=hasta, fecha=fecha, adultos=adultos)
 
-@app.route("/informacion-usuario")
+@app.route("/informacion-usuario", methods=["GET", "POST"])
 def info_usuario():
+    if request.method == "POST":
+        nombre = request.form.get("nombre")
+        apellido = request.form.get("apellido")
+        pasaporte = request.form.get("pasaporte")
+        mail = request.form.get("correo")
+        return redirect(url_for("prueba", nombre=nombre, apellido=apellido, pasaporte=pasaporte, mail=mail))
     return render_template('informacion-usuario.html')
 
 @app.route("/resultados-de-busqueda")

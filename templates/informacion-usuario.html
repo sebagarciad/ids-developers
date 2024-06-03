@@ -6,7 +6,7 @@
 	
 		<div class="fh5co-hero">
 			<div class="fh5co-overlay"></div>
-			<div class="fh5co-cover" data-stellar-background-ratio="0.5" style="background-image: url(images/cover_bg_1.jpg);">
+			<div class="fh5co-cover" data-stellar-background-ratio="0.5");">
 				<div class="desc">
 					<div class="container">
 						<div class="row">
@@ -23,30 +23,31 @@
 
 								   <!-- Tab panes -->
 									<div class="tab-content">
-									 <div role="tabpanel" class="tab-pane active" id="flights">
+									 <div role="tabpanel" class="tab-pane active" id="infousuario">
 										<div class="row">
+											<form action="{{url_for('home')}}" method="post">
 											<div class="col-sm-12 mt">
 												<section>
 													<label for="class">Nombre:</label>
-													<input type="text" id="nombre" name="fnombre" placeholder="Juan">
+													<input type="text" id="name" name="nombre" placeholder="Juan">
 												</section>
 											</div>
 											<div class="col-sm-12 mt">
 												<section>
 													<label for="class">Apellido:</label>
-													<input type="text" id="apellido" name="fapellido" placeholder="Perez">
+													<input type="text" id="lname" name="apellido" placeholder="Perez">
 												</section>
 											</div>
 											<div class="col-sm-12 mt">
 												<section>
 													<label for="class">Pasaporte/DNI:</label>
-													<input type="text" id="nombre" name="fnombre" placeholder="ZZZ000110">
+													<input type="text" id="passport" name="pasaporte" placeholder="ZZZ000110">
 												</section>
 											</div>
 											<div class="col-sm-12 mt">
 												<section>
 													<label for="class">Correo electronico:</label>
-													<input type="text" id="mail" name="fmail" placeholder="juanperez@gmail.com">
+													<input type="text" id="mail" name="correo" placeholder="juanperez@gmail.com">
 												</section>
 											</div>
 											<div class="col-xs-12">
