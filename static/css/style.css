@@ -1977,4 +1977,9 @@ div.cs-select span {
   background: url(../images/hourglass.svg) center no-repeat #222222;
 }
 
+.no-vuelos-disponibles {
+  text-align: center;
+  align-content: center;
+}
+
 /*# sourceMappingURL=style.css.map */

@@ -1936,6 +1936,10 @@ pre code {
   padding-left: 15px;
   padding-right: 15px;
 }
+
+.cont {
+  text-align: center;
+}
 .container:before, .container:after {
   content: " ";
   display: table;
