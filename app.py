@@ -36,11 +36,19 @@ def info_usuario():
 
 @app.route("/resultados-de-busqueda")
 def resultados_busqueda():
-    return render_template('resultados-de-busqueda.html')
-
-@app.route("/no-resultados")
-def no_resultados():
-    return render_template('no-resultados.html')
+    origen = 'Buenos Aires'
+    destino = ''
+    nro_vuelo = 'AR1549'
+    duracion = '1 hora 15 minutos'
+    hora_salida = '15:00 hs'
+    hora_llegada = '16:15 hs'
+    precio = '$75000'
+    fecha = '4/6/2024'
+    informacion = [origen, destino, nro_vuelo, duracion, hora_salida, hora_llegada, precio, fecha]
+    for elemento in informacion:
+        if not elemento:
+            return render_template('no-resultados.html')
+    return render_template('resultados-de-busqueda.html', origen=origen, destino=destino, nro_vuelo=nro_vuelo, duracion=duracion, hora_salida=hora_salida, hora_llegada=hora_llegada, precio=precio, fecha=fecha)
 
 @app.route("/compra-confirmada", methods=["GET"])
 def compra_confirmada():

@@ -10,77 +10,76 @@
 				<div class="desc">
 					<div class="container">
 						<div class="row">
-							<div class="col-sm-5 col-md-5">
+							<div class="col-sm-5 col-md-12">
 								<div class="tabulation animate-box">
 
 								  <!-- Nav tabs -->
 								   <ul class="nav nav-tabs" role="tablist">
 								      <li role="presentation" class="active">
-								      	<a href="#flights" aria-controls="flights" role="tab" data-toggle="tab">Flights</a>
+								      	<a href="#resultados-busqueda" aria-controls="resultados-busqueda" role="tab" data-toggle="tab">{{origen}} - {{destino}}</a>
 								      </li>
 								 
 								   </ul>
 
 								   <!-- Tab panes -->
 									<div class="tab-content">
-									 	<div role="tabpanel" class="tab-pane active" id="flights">
-											<div class="row">
-												<form action="{{url_for('home')}}" method="post">
-												<div class="col-sm-12 mt">
-													<section>
-														<label for="class">From:</label>
-														<select class="cs-select cs-skin-border" name="desde">
-															<option value=""  disabled selected>Seleccione una opción</option>
-															<option value="Buenos Aires">Buenos Aires</option>
-														</select>
-													</section>
-												</div>
-												<div class="col-xxs-12 col-xs-6 mt">
-													<section>
-														<label for="class">To:</label>
-														<select class="cs-select cs-skin-border" name="hasta">
-															<option value="" disabled selected>Seleccione una opción</option>
-															<option value="Cordoba" >Cordoba</option>
-															<option value="Bariloche" >Bariloche</option>
-															<option value="Misiones" >Misiones</option>
-															<option value="Ushuaia" >Ushuaia</option>
-														</select>
-													</section>
-												</div>
-												<div class="col-xxs-12 col-xs-6 mt alternate">
-													<div class="input-field">
-														<label for="date-start">Check In:</label>
-														<input type="text" class="form-control" id="date-start" placeholder="mm/dd/yyyy" name="fecha"/>
-													</div>
-												</div>
-												<div class="col-xxs-12 col-xs-6 mt">
-													<section>
-														<label for="class">Adult:</label>
-														<select class="cs-select cs-skin-border" name="adultos">
-															<option value="" disabled selected>Seleccione una opción</option>
-															<option value="1">1</option>
-															<option value="2">2</option>
-															<option value="3">3</option>
-															<option value="4">4</option>
-														</select>
-													</section>
-												</div>
-												<div class="col-xs-12">
-													<input type="submit" class="btn btn-primary btn-block" value="Search Flight">
-												</div>
-												</form>
+										<div role="tabpanel" class="tab-pane active" id="infousuario">
+										   <div class="row">
+											<div class="col-xxs-12 col-xs-6 mt">
+												<section>
+													<label for="class">Desde:</label>
+													<p id="resultado">{{origen}}</p>
+												</section>
 											</div>
-									 	</div>
+											<div class="col-xxs-12 col-xs-6 mt alternate">
+												<section>
+													<label for="class">Hacia:</label>
+													<p id="resultado">{{destino}}</p>
+												</section>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="class">Número de vuelo:</label>
+													<p id="resultado">{{nro_vuelo}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt alternate">
+												<section>
+													<label for="class">Duración:</label>
+													<p id="resultado">{{duracion}}</p>
+												</section>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="date-start">Fecha del vuelo:</label>
+													<p id="resultado">{{fecha}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="date-start">Precio del pasaje:</label>
+													<p id="resultado">{{precio}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="date-start">Hora de partida:</label>
+													<p id="resultado">{{hora_salida}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<section>
+													<label for="class">Horar de arribo:</label>
+													<p id="resultado">{{hora_llegada}}</p>
+												</section>
+											</div>
+											<div class="col-xs-12">
+												<a href="{{ url_for('info_usuario', _external=True)}}"><button type="submit" class="btn btn-primary btn-block" value="Seleccionar vuelo">Seleccionar este vuelo</button></a>
+												</br>
+												<a href="{{ url_for('home', _external=True)}}"><button class="btn btn-primary btn-block">Elegir otra fecha o destino</button></a>
+											</div>
+										</div>
 									</div>
-								</div>
-							</div>
-							<div class="desc2 animate-box">
-								<div class="col-sm-7 col-sm-push-1 col-md-7 col-md-push-1">
-									<p>HandCrafted by <a href="http://frehtml5.co/" target="_blank" class="fh5co-site-name">FreeHTML5.co</a></p>
-									<h2>Exclusive Limited Time Offer</h2>
-									<h3>Fly to Hong Kong via Los Angeles, USA</h3>
-									<span class="price">$599</span>
-									<!-- <p><a class="btn btn-primary btn-lg" href="#">Get Started</a></p> -->
 								</div>
 							</div>
 						</div>

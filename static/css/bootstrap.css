@@ -7324,4 +7324,15 @@ button.close {
   }
 }
 
+.button-container button {
+  display: inline-block;
+  margin-right: 10px;
+  width: 30;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  flex-direction: row;
+}
+
 /*# sourceMappingURL=bootstrap.css.map */

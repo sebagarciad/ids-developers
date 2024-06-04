@@ -1982,4 +1982,11 @@ div.cs-select span {
   align-content: center;
 }
 
+#resultado {
+  color: rgba(0, 0, 0, 0.5);
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-weight: bold;
+}
+
 /*# sourceMappingURL=style.css.map */
