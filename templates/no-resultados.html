@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block body %} 
+		
+
+		<!-- end:header-top -->
+	
+		<div class="fh5co-hero">
+			<div class="fh5co-overlay"></div>
+			<div class="fh5co-cover" data-stellar-background-ratio="0.5" style="background-image: url(images/cover_bg_1.jpg);">
+				<div class="desc">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-5 col-md-5">
+								<div class="tabulation animate-box">
+
+								  <!-- Nav tabs -->
+								   <ul class="nav nav-tabs" role="tablist">
+								      <li role="presentation" class="active">
+								      	<a href="#flights" aria-controls="flights" role="tab" data-toggle="tab">Flights</a>
+								      </li>
+								 
+								   </ul>
+
+								   <!-- Tab panes -->
+									<div class="tab-content">
+									 	<div role="tabpanel" class="tab-pane active" id="flights">
+											<div class="row">
+												<form action="{{url_for('home')}}" method="post">
+												<div class="col-sm-12 mt">
+													<section>
+														<label for="class">From:</label>
+														<select class="cs-select cs-skin-border" name="desde">
+															<option value=""  disabled selected>Seleccione una opción</option>
+															<option value="Buenos Aires">Buenos Aires</option>
+														</select>
+													</section>
+												</div>
+												<div class="col-xxs-12 col-xs-6 mt">
+													<section>
+														<label for="class">To:</label>
+														<select class="cs-select cs-skin-border" name="hasta">
+															<option value="" disabled selected>Seleccione una opción</option>
+															<option value="Cordoba" >Cordoba</option>
+															<option value="Bariloche" >Bariloche</option>
+															<option value="Misiones" >Misiones</option>
+															<option value="Ushuaia" >Ushuaia</option>
+														</select>
+													</section>
+												</div>
+												<div class="col-xxs-12 col-xs-6 mt alternate">
+													<div class="input-field">
+														<label for="date-start">Check In:</label>
+														<input type="text" class="form-control" id="date-start" placeholder="mm/dd/yyyy" name="fecha"/>
+													</div>
+												</div>
+												<div class="col-xxs-12 col-xs-6 mt">
+													<section>
+														<label for="class">Adult:</label>
+														<select class="cs-select cs-skin-border" name="adultos">
+															<option value="" disabled selected>Seleccione una opción</option>
+															<option value="1">1</option>
+															<option value="2">2</option>
+															<option value="3">3</option>
+															<option value="4">4</option>
+														</select>
+													</section>
+												</div>
+												<div class="col-xs-12">
+													<input type="submit" class="btn btn-primary btn-block" value="Search Flight">
+												</div>
+												</form>
+											</div>
+									 	</div>
+									</div>
+								</div>
+							</div>
+							<div class="desc2 animate-box">
+								<div class="col-sm-7 col-sm-push-1 col-md-7 col-md-push-1">
+									<h2>No se encontraron vuelos disponibles</h2>
+									<h3>No hay vuelos disponibles para dicho día y ruta</h3>
+                                    <div class="col-xs-12">
+									    <button class="btn btn-primary btn-block">Buscar otro vuelo<button>
+                                    </div>
+									<!-- <p><a class="btn btn-primary btn-lg" href="#">Get Started</a></p> -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	
+
+	</div>
+	<!-- END fh5co-page -->
+
+	</div>
+	<!-- END fh5co-wrapper -->
+
+	<!-- jQuery -->
+
+
+	<script src="{{url_for('static', filename='/js/jquery.min.js', _external=True)}}"></script>
+	<!-- jQuery Easing -->
+	<script src="{{url_for('static', filename='/js/jquery.easing.1.3.js', _external=True)}}"></script>
+	<!-- Bootstrap -->
+	<script src="{{url_for('static', filename='/js/bootstrap.min.js', _external=True)}}"></script>
+	<!-- Waypoints -->
+	<script src="{{url_for('static', filename='/js/jquery.waypoints.min.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/sticky.js', _external=True)}}"></script>
+
+	<!-- Stellar -->
+	<script src="{{url_for('static', filename='/js/jquery.stellar.min.js', _external=True)}}"></script>
+	<!-- Superfish -->
+	<script src="{{url_for('static', filename='/js/hoverIntent.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/superfish.js', _external=True)}}"></script>
+	<!-- Magnific Popup -->
+	<script src="{{url_for('static', filename='/js/jquery.magnific-popup.min.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/magnific-popup-options.js', _external=True)}}"></script>
+	<!-- Date Picker -->
+	<script src="{{url_for('static', filename='/js/bootstrap-datepicker.min.js', _external=True)}}"></script>
+	<!-- CS Select -->
+	<script src="{{url_for('static', filename='/js/classie.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/selectFx.js', _external=True)}}"></script>
+	
+	<!-- Main JS -->
+	<script src="{{url_for('static', filename='/js/main.js', _external=True)}}"></script>
+
+	{% endblock %}
+
