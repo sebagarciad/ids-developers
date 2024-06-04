@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block body %}
+</br>
+<div>
+    <h1>Compra confirmada</h1>
+    </br>
+    </br>
+    <h2><strong>Datos personales:</strong></h2>
+    </br>
+    <ul>
+        {% for dato, valor in datos_personales.items() %}
+            <li>{{dato}}: {{valor}}</li>
+            </br>
+        {% endfor %}
+    </ul>
+    </div>
+    </br>
+    <h2><strong>Datos del vuelo:</strong></h2>
+    </br>
+    <ul>
+        {% for dato, valor in datos_vuelo.items() %}
+            <li>{{dato}}: {{valor}}</li>
+            </br>
+        {% endfor %}
+    </ul>
+</div> 
