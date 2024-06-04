@@ -38,6 +38,10 @@ def info_usuario():
 def resultados_busqueda():
     return render_template('resultados-de-busqueda.html')
 
+@app.route("/no-resultados")
+def no_resultados():
+    return render_template('no-resultados.html')
+
 
 '''@app.errorhandler(404)
 def page_not_found(e):
