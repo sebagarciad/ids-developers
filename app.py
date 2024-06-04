@@ -37,12 +37,12 @@ def info_usuario():
 @app.route("/resultados-de-busqueda")
 def resultados_busqueda():
     origen = 'Buenos Aires'
-    destino = ''
+    destino = 'Córdoba'
     nro_vuelo = 'AR1549'
     duracion = '1 hora 15 minutos'
     hora_salida = '15:00 hs'
     hora_llegada = '16:15 hs'
-    precio = '$75000'
+    precio = '$45000'
     fecha = '4/6/2024'
     informacion = [origen, destino, nro_vuelo, duracion, hora_salida, hora_llegada, precio, fecha]
     for elemento in informacion:
