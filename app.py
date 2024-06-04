@@ -42,6 +42,11 @@ def resultados_busqueda():
 def no_resultados():
     return render_template('no-resultados.html')
 
+@app.route("/compra-confirmada", methods=["GET"])
+def compra_confirmada():
+    datos_personales = api.get_usuario()
+    datos_vuelo = api.get_transaccion()
+    return render_template('home.html', datos_personales=datos_personales, datos_vuelo=datos_vuelo)
 
 '''@app.errorhandler(404)
 def page_not_found(e):
