@@ -25,29 +25,41 @@
 									<div class="tab-content">
 									 <div role="tabpanel" class="tab-pane active" id="infousuario">
 										<div class="row">
-											<form action="{{url_for('home')}}" method="post">
+											<form action="{{url_for('info_usuario')}}" method="post">
 											<div class="col-sm-12 mt">
 												<section>
 													<label for="class">Nombre:</label>
-													<input type="text" id="name" name="nombre" placeholder="Juan">
+													<input type="text" id="nombre" name="nombre" placeholder="Juan">
+													{% if errores_validacion and errores_validacion.get("nombre") %}
+														<div class="alert alert-danger">{{ errores_validacion.get("nombre") }}</div>
+													{% endif %}
 												</section>
 											</div>
 											<div class="col-sm-12 mt">
 												<section>
 													<label for="class">Apellido:</label>
-													<input type="text" id="lname" name="apellido" placeholder="Perez">
+													<input type="text" id="apellido" name="apellido" placeholder="Perez">
+													{% if errores_validacion and errores_validacion.get("apellido") %}
+														<div class="alert alert-danger">{{ errores_validacion.get("apellido") }}</div>
+													{% endif %}
 												</section>
 											</div>
 											<div class="col-sm-12 mt">
 												<section>
 													<label for="class">Pasaporte/DNI:</label>
-													<input type="text" id="passport" name="pasaporte" placeholder="ZZZ000110">
+													<input type="text" id="pasaporte" name="pasaporte" placeholder="ZZZ000110">
+													{% if errores_validacion and errores_validacion.get("pasaporte") %}
+														<div class="alert alert-danger">{{ errores_validacion.get("pasaporte") }}</div>
+													{% endif %}
 												</section>
 											</div>
 											<div class="col-sm-12 mt">
 												<section>
 													<label for="class">Correo electronico:</label>
-													<input type="text" id="mail" name="correo" placeholder="juanperez@gmail.com">
+													<input type="text" id="mail" name="mail" placeholder="juanperez@gmail.com">
+													{% if errores_validacion and errores_validacion.get("mail") %}
+														<div class="alert alert-danger">{{ errores_validacion.get("mail") }}</div>
+													{% endif %}
 												</section>
 											</div>
 											<div class="col-xs-12">
