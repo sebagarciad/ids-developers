@@ -1,5 +1,6 @@
+#!/bin/bash
 # Dependencias necesarias para conectarse a MySQL desde Flask.
 
-pip install flask_sqlalchemy
+source .venv/bin/activate
 
-pip install mysql-connector-python
+pip install -r requirements.txt
