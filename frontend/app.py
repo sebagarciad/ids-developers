@@ -30,7 +30,7 @@ def info_usuario():
     if request.method == "POST":
         nombre = request.form.get("nombre")
         apellido = request.form.get("apellido")
-        pasaporte = request.form.get("pasaporte")
+        dni = request.form.get("dni")
         mail = request.form.get("mail")
         
         errores_validacion = {}
@@ -38,15 +38,15 @@ def info_usuario():
             errores_validacion["nombre"] = "El nombre es obligatorio"
         if not apellido:
             errores_validacion["apellido"] = "El apellido es obligatorio"
-        if not pasaporte or len(pasaporte) != 9:
-            errores_validacion["pasaporte"] = "El pasaporte debe tener el formato AAA123456"
+        if not dni or not 7 <= len(dni) <= 8:
+            errores_validacion["dni"] = "El pasaporte debe tener el formato AAA123456"
         if not mail or not re.match(r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$', mail):
             errores_validacion["mail"] = "Ingresar una direccion de correo electronico valida"
 
         if errores_validacion:
             return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, pasaporte=pasaporte, mail=mail)
         
-        return redirect(url_for("prueba", nombre=nombre, apellido=apellido, pasaporte=pasaporte, mail=mail))
+        return redirect(url_for("prueba", nombre=nombre, apellido=apellido, dni=dni, mail=mail))
     
     return render_template('informacion-usuario.html')
 
