@@ -14,7 +14,7 @@ def home():
         fecha = request.form.get("fecha")
         adultos = request.form.get("adultos")
         print(f"desde es = {desde}" )
-        return redirect(url_for("prueba", desde=desde, hasta=hasta, fecha=fecha, adultos=adultos))
+        return redirect(url_for("resultados_busqueda", desde=desde, hasta=hasta, fecha=fecha, adultos=adultos))
     return render_template('index.html')
 
 @app.route("/prueba")
