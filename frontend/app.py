@@ -72,10 +72,35 @@ def compra_confirmada():
     datos_vuelo = {'destino': 'mendoza', 'fecha': '1/08/2024'}
     return render_template('compra-confirmada.html', datos_personales=datos_personales, datos_vuelo=datos_vuelo)
 
+@app.route('/pago', methods=["GET", "POST"])
+def pago():
+    if request.method == "POST":
+        tipo_tarjeta = request.form.get("tarjeta")
+        nombre_titular = request.form.get("titular-tarjeta")
+        numero_tarjeta = request.form.get("numero-tarjeta")
+        vencimiento = request.form.get("vencimiento")
+        codigo_seguridad = request.form.get("codigo-seguridad")
+
+        errores_validacion = {}
+        if not nombre_titular:
+            errores_validacion["tipo_tarjeta"] = "Debe seleccionar un tipo de tarjeta"
+        if not nombre_titular:
+            errores_validacion["nombre_titular"] = "El nombre del titular es obligatorio"
+        if not numero_tarjeta or not len(numero_tarjeta) == 16:
+            errores_validacion["numero_tarjeta"] = "El número de la tarjeta debe ser válido"
+        if not vencimiento or not len(vencimiento) == 5:
+            errores_validacion["vencimiento"] = "La fecha de vencimiento debe ser válida"
+        if not codigo_seguridad or not len(codigo_seguridad) == 3:
+            errores_validacion["codigo_seguridad"] = "El código de seguridad debe ser válido"
+        
+        if errores_validacion:
+            return render_template('pago.html', errores_validacion=errores_validacion, nombre_titular=nombre_titular, numero_tarjeta=numero_tarjeta, vencimiento=vencimiento, codigo_seguridad=codigo_seguridad)
+        
+    return render_template('pago.html')
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
 
 
 if __name__ == "__main__":
