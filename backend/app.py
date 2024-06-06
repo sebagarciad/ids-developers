@@ -8,6 +8,26 @@ from sqlalchemy.exc import SQLAlchemyError
 app = Flask(__name__)
 engine = create_engine("mysql+mysqlconnector://root:developers@localhost/tpintro")
 
+@app.route('/users/<dni>', methods = ['GET'])
+def get_usuario(dni):
+    conn = engine.connect()
+    query = "SELECT * FROM usuarios where dni = {dni};"
+    try:
+        result = conn.execute(text(query))
+        conn.commit()
+        conn.close()
+    except SQLAlchemyError as err:
+        return jsonify(str(err.__cause__))
+    if result.rowcount !=0:
+        data = {}
+        row = result.first()
+        data['nombre'] = row[0]
+        data['apellido'] = row[1]
+        data['dni'] = row[2]
+        data['mail'] = row[3]
+        return jsonify(data), 200
+    return jsonify({"message": "El usuario no existe"}), 404
+
 
 @app.route('/aeropuertos', methods = ['GET'])
 def aeropuertos():
