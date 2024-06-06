@@ -39,7 +39,7 @@ def info_usuario():
         if not apellido:
             errores_validacion["apellido"] = "El apellido es obligatorio"
         if not dni or not 7 <= len(dni) <= 8:
-            errores_validacion["dni"] = "El pasaporte debe tener el formato AAA123456"
+            errores_validacion["dni"] = "Ingresar un DNI valido."
         if not mail or not re.match(r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$', mail):
             errores_validacion["mail"] = "Ingresar una direccion de correo electronico valida"
 
