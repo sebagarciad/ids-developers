@@ -72,9 +72,9 @@ def compra_confirmada():
     datos_vuelo = {'destino': 'mendoza', 'fecha': '1/08/2024'}
     return render_template('compra-confirmada.html', datos_personales=datos_personales, datos_vuelo=datos_vuelo)
 
-'''@app.errorhandler(404)
+@app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'), 404'''
+    return render_template('404.html'), 404
 
 
 
