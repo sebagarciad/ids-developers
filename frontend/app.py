@@ -75,15 +75,12 @@ def compra_confirmada():
 @app.route('/pago', methods=["GET", "POST"])
 def pago():
     if request.method == "POST":
-        tipo_tarjeta = request.form.get("tarjeta")
         nombre_titular = request.form.get("titular-tarjeta")
         numero_tarjeta = request.form.get("numero-tarjeta")
         vencimiento = request.form.get("vencimiento")
         codigo_seguridad = request.form.get("codigo-seguridad")
 
         errores_validacion = {}
-        if not nombre_titular:
-            errores_validacion["tipo_tarjeta"] = "Debe seleccionar un tipo de tarjeta"
         if not nombre_titular:
             errores_validacion["nombre_titular"] = "El nombre del titular es obligatorio"
         if not numero_tarjeta or not len(numero_tarjeta) == 16:

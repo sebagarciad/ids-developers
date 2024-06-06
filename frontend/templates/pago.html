@@ -21,19 +21,6 @@
                                  <div role="tabpanel" class="tab-pane active" id="flights">
                                     <div class="row">
                                         <form action="{{url_for('pago')}}" method="post">
-                                        <div class="col-sm-12 mt">
-                                            <section>
-                                                <label for="class">Tipo de tarjeta:</label>
-                                                <select class="cs-select cs-skin-border" name="tarjeta">
-                                                    <option value=""  disabled selected>Seleccione una opción</option>
-                                                    <option value="Debito">Débito</option>
-                                                    <option value="Credito">Crédito</option>
-                                                    {% if errores_validacion and errores_validacion.get("tipo_tarjeta") %}
-													    <div class="alert alert-danger">{{ errores_validacion.get("tipo_tarjeta") }}</div>
-												    {% endif %}
-                                                </select>
-                                            </section>
-                                        </div>
                                         <div class="col-xxs-10">
                                             <section>
                                             <div class="input-field">
