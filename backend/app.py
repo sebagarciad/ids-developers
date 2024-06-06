@@ -28,6 +28,23 @@ def get_usuario(dni):
         return jsonify(data), 200
     return jsonify({"message": "El usuario no existe"}), 404
 
+@app.route('/crear-usuario', methods = ['POST'])
+def crear_usuario():
+    conn = engine.connect()
+    new_user = request.get_json()
+    #Se crea la query en base a los datos pasados por el endpoint.
+    #Los mismos deben viajar en el body en formato JSON
+    query = f"""INSERT INTO usuarios (nombre, apellido, dni, mail) VALUES '{new_user["nombre"]}', '{new_user["apellido"]}', '{new_user["dni"]}', '{new_user["mail"]}';"""
+    try:
+        result = conn.execute(text(query))
+        #Una vez ejecutada la consulta, se debe hacer commit de la misma para que
+        #se aplique en la base de datos.
+        conn.commit()
+        conn.close()
+    except SQLAlchemyError as err:
+        return jsonify({'message': 'Se ha producido un error' + str(err.__cause__)})
+    
+    return jsonify({'message': 'se ha agregado correctamente' + query}), 201
 
 @app.route('/aeropuertos', methods = ['GET'])
 def aeropuertos():
