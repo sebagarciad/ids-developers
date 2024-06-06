@@ -165,11 +165,11 @@ figure {
 
 .fh5co-cover {
   background-size: cover;
-  position: relative;
+  position:relative;
 }
 @media screen and (max-width: 768px) {
   .fh5co-cover {
-    heifght: inherit;
+    heigfht: inherit;
     padding: 3em 0;
   }
 }
