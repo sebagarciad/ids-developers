@@ -93,6 +93,9 @@ def pago():
         if errores_validacion:
             return render_template('pago.html', errores_validacion=errores_validacion, nombre_titular=nombre_titular, numero_tarjeta=numero_tarjeta, vencimiento=vencimiento, codigo_seguridad=codigo_seguridad)
         
+        return redirect(url_for("compra_confirmada", nombre_titular=nombre_titular, numero_tarjeta=numero_tarjeta, vencimiento=vencimiento, codigo_seguridad=codigo_seguridad))
+
+
     return render_template('pago.html')
 
 @app.errorhandler(404)
