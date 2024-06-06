@@ -47,6 +47,7 @@ def vuelos():
     data = []
     for row in result:
         entity = {}
+        entity['id_vuelo'] = row.id_vuelo
         entity['codigo_aeropuerto_origen'] = row.codigo_aeropuerto_origen
         entity['codigo_aeropuerto_destino'] = row.codigo_aeropuerto_destino
         entity['hora_salida'] = row.hora_salida
