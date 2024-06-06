@@ -34,6 +34,30 @@ def aeropuertos():
 
     return jsonify(data), 200
 
+@app.route('/vuelos', methods = ['GET'])
+def vuelos():
+    conn = engine.connect()
+    query = "SELECT * FROM vuelos"
+    try:
+        result = conn.execute(text(query))
+        conn.close()
+    except SQLAlchemyError as err:
+        return jsonify(str(err.__cause__))
+
+    data = []
+    for row in result:
+        entity = {}
+        entity['codigo_aeropuerto_origen'] = row.codigo_aeropuerto_origen
+        entity['codigo_aeropuerto_destino'] = row.codigo_aeropuerto_destino
+        entity['hora_salida'] = row.hora_salida
+        entity['hora_llegada'] = row.hora_llegada
+        entity['duracion'] = row.duracion
+        entity['precio'] = row.precio
+        entity['pasajes_disponibles'] = row.pasajes_disponibles
+        data.append(entity)
+
+    return jsonify(data), 200
+
 
 
 
