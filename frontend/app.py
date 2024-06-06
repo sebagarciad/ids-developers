@@ -46,7 +46,7 @@ def info_usuario():
         if errores_validacion:
             return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
         
-        return redirect(url_for("prueba", nombre=nombre, apellido=apellido, dni=dni, mail=mail))
+        return redirect(url_for("pago", nombre=nombre, apellido=apellido, dni=dni, mail=mail))
     
     return render_template('informacion-usuario.html')
 
