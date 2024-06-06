@@ -98,6 +98,26 @@ def vuelos():
 
     return jsonify(data), 200
 
+@app.route('/transacciones', methods = ['GET'])
+def transacciones():
+    conn = engine.connect()
+    query = "SELECT * FROM transacciones"
+    try:
+        result = conn.execute(text(query))
+        conn.commit()
+        conn.close()
+    except SQLAlchemyError as err:
+        return jsonify(str(err.__cause__))
+    
+    data = []
+    for row in result:
+        entity = {}
+        entity['num_transaccion'] = row.num_transaccion
+        entity['id_vuelo'] = row.id_vuelo
+        entity['total_transaccion'] = row.total_transaccion
+        data.append(entity)
+
+    return jsonify(data), 200
 
 @app.route('/crear_transaccion', methods = ['POST'])
 def crear_transaccion():
