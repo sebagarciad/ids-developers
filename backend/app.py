@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 
 app = Flask(__name__)
-engine = create_engine("mysql+mysqlconnector://root@localhost/tpintro")
+engine = create_engine("mysql+mysqlconnector://root:developers@localhost/tpintro")
 
 
 @app.route('/aeropuertos', methods = ['GET'])
@@ -59,6 +59,47 @@ def vuelos():
     return jsonify(data), 200
 
 
+@app.route('/crear_transaccion', methods = ['POST'])
+def crear_transaccion():
+    conn = engine.connect()
+    nueva_transaccion = request.get_json()
+    #Se crea la query en base a los datos pasados por el endpoint.
+    #Los mismos deben viajar en el body en formato JSON
+    query = f"""INSERT INTO transacciones (id_vuelo, total_transaccion) VALUES '{nueva_transaccion["id_vuelo"]}', '{nueva_transaccion["total_transaccion"]}';"""
+    try:
+        result = conn.execute(text(query))
+        #Una vez ejecutada la consulta, se debe hacer commit de la misma para que
+        #se aplique en la base de datos.
+        conn.commit()
+        conn.close()
+    except SQLAlchemyError as err:
+        return jsonify({'message': 'Se ha producido un error' + str(err.__cause__)})
+    
+    return jsonify({'message': 'se ha agregado correctamente' + query}), 201
+
+
+@app.route('/vuelos/<id_vuelo>', methods = ['PATCH'])
+def actualizar_vuelo(id_vuelo):
+    conn = engine.connect()
+    mod_vuelo = request.get_json()
+    #De la misma manera que con el metodo POST los datos a modificar deberán
+    #Ser enviados por medio del body de la request
+    query = f"""UPDATE users SET pasajes_disponibles = '{mod_vuelo['pasajes_disponibles']}'
+                WHERE id_vuelo = {id_vuelo};
+            """
+    query_validation = f"SELECT * FROM vuelos WHERE id_vuelos = {id_vuelos};"
+    try:
+        val_result = conn.execute(text(query_validation))
+        if val_result.rowcount!=0:
+            result = conn.execute(text(query))
+            conn.commit()
+            conn.close()
+        else:
+            conn.close()
+            return jsonify({'message': "El vuelo no existe"}), 404
+    except SQLAlchemyError as err:
+        return jsonify({'message': str(err.__cause__)})
+    return jsonify({'message': 'se ha modificado correctamente' + query}), 200
 
 
 if __name__ == "__main__":
