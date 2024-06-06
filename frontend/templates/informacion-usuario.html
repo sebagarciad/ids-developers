@@ -46,10 +46,10 @@
 											</div>
 											<div class="col-sm-12 mt">
 												<section>
-													<label for="class">Pasaporte/DNI:</label>
-													<input type="text" id="pasaporte" name="pasaporte" placeholder="ZZZ000110">
-													{% if errores_validacion and errores_validacion.get("pasaporte") %}
-														<div class="alert alert-danger">{{ errores_validacion.get("pasaporte") }}</div>
+													<label for="class">DNI:</label>
+													<input type="text" id="dni" name="dni" placeholder="12345678">
+													{% if errores_validacion and errores_validacion.get("dni") %}
+														<div class="alert alert-danger">{{ errores_validacion.get("dni") }}</div>
 													{% endif %}
 												</section>
 											</div>
