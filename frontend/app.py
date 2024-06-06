@@ -12,9 +12,7 @@ def home():
         desde = request.form.get("desde")
         hasta = request.form.get("hasta")
         fecha = request.form.get("fecha")
-        adultos = request.form.get("adultos")
-        print(f"desde es = {desde}" )
-        return redirect(url_for("resultados_busqueda", desde=desde, hasta=hasta, fecha=fecha, adultos=adultos))
+        return redirect(url_for("resultados_busqueda", desde=desde, hasta=hasta, fecha=fecha))
     return render_template('index.html')
 
 @app.route("/prueba")
@@ -22,8 +20,7 @@ def prueba():
     desde = request.args.get("desde", None)
     hasta = request.args.get("hasta", None)
     fecha = request.args.get("fecha", None)
-    adultos = request.args.get("adultos", None)
-    return render_template("prueba.html", desde=desde, hasta=hasta, fecha=fecha, adultos=adultos)
+    return render_template("prueba.html", desde=desde, hasta=hasta, fecha=fecha)
 
 @app.route("/informacion-usuario", methods=["GET", "POST"])
 def info_usuario():
