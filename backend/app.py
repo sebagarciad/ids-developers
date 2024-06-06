@@ -87,7 +87,7 @@ def actualizar_vuelo(id_vuelo):
     query = f"""UPDATE users SET pasajes_disponibles = '{mod_vuelo['pasajes_disponibles']}'
                 WHERE id_vuelo = {id_vuelo};
             """
-    query_validation = f"SELECT * FROM vuelos WHERE id_vuelos = {id_vuelos};"
+    query_validation = f"SELECT * FROM vuelos WHERE id_vuelos = {id_vuelo};"
     try:
         val_result = conn.execute(text(query_validation))
         if val_result.rowcount!=0:
