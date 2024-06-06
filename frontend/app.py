@@ -12,9 +12,7 @@ def home():
         desde = request.form.get("desde")
         hasta = request.form.get("hasta")
         fecha = request.form.get("fecha")
-        adultos = request.form.get("adultos")
-        print(f"desde es = {desde}" )
-        return redirect(url_for("prueba", desde=desde, hasta=hasta, fecha=fecha, adultos=adultos))
+        return redirect(url_for("resultados_busqueda", desde=desde, hasta=hasta, fecha=fecha))
     return render_template('index.html')
 
 @app.route("/prueba")
@@ -22,8 +20,7 @@ def prueba():
     desde = request.args.get("desde", None)
     hasta = request.args.get("hasta", None)
     fecha = request.args.get("fecha", None)
-    adultos = request.args.get("adultos", None)
-    return render_template("prueba.html", desde=desde, hasta=hasta, fecha=fecha, adultos=adultos)
+    return render_template("prueba.html", desde=desde, hasta=hasta, fecha=fecha)
 
 @app.route("/informacion-usuario", methods=["GET", "POST"])
 def info_usuario():
@@ -68,9 +65,19 @@ def resultados_busqueda():
 
 @app.route("/compra-confirmada", methods=["GET"])
 def compra_confirmada():
-    datos_personales = {'nombre': 'juan', 'apellido': 'lopez'}
-    datos_vuelo = {'destino': 'mendoza', 'fecha': '1/08/2024'}
-    return render_template('compra-confirmada.html', datos_personales=datos_personales, datos_vuelo=datos_vuelo)
+    origen = 'Buenos Aires'
+    destino = 'Córdoba'
+    nro_vuelo = 'AR1549'
+    duracion = '1 hora 15 minutos'
+    hora_salida = '15:00 hs'
+    hora_llegada = '16:15 hs'
+    precio = '$45000'
+    fecha = '4/6/2024'
+    nombre = 'Juan'
+    apellido = 'Perez'
+    dni = '12345678'
+    mail = 'example@gmail.com'
+    return render_template('compra-confirmada.html', origen=origen, destino=destino, nro_vuelo=nro_vuelo, duracion=duracion, hora_salida=hora_salida, hora_llegada=hora_llegada, precio=precio, fecha=fecha, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
 
 @app.route('/pago', methods=["GET", "POST"])
 def pago():
