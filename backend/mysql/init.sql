@@ -29,10 +29,7 @@ CREATE TABLE IF NOT EXISTS transacciones (
     num_transaccion INT AUTO_INCREMENT PRIMARY KEY,
     id_vuelo INT
     total_transaccion DECIMAL(10, 2),
-    num_tarjeta INT,
-    codigo_tarjeta INT,
-    vencimiento INT,
-    titular VARCHAR(30) 
+    
 );
 
 
