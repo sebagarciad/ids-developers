@@ -1,4 +1,4 @@
-USE tpintro;
+USE tpintro_dev;
 
 CREATE TABLE IF NOT EXISTS aeropuertos (
     codigo_aeropuerto VARCHAR(3) PRIMARY KEY,
@@ -15,11 +15,14 @@ CREATE TABLE IF NOT EXISTS vuelos (
     hora_llegada DATETIME,
     duracion INT,
     precio DECIMAL(10, 2),
-    pasajes_disponibles INT
+    pasajes_disponibles INT,
+    FOREIGN KEY (codigo_aeropuerto_origen) REFERENCES aeropuertos(codigo_aeropuerto),
+    FOREIGN KEY (codigo_aeropuerto_destino) REFERENCES aeropuertos(codigo_aeropuerto)
 );
 
+
 CREATE TABLE IF NOT EXISTS usuarios (
-    dni INT PRIMARY KEY,
+    cuil INT PRIMARY KEY,
     nombre VARCHAR(30),
     apellido VARCHAR(30),
     mail VARCHAR(40) 
@@ -27,9 +30,11 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
 CREATE TABLE IF NOT EXISTS transacciones (
     num_transaccion INT AUTO_INCREMENT PRIMARY KEY,
-    id_vuelo INT
+    id_vuelo INT,
     total_transaccion DECIMAL(10, 2),
-    
+    cuil INT,
+    FOREIGN KEY (id_vuelo) REFERENCES vuelos(id_vuelo),
+    FOREIGN KEY (cuil) REFERENCES usuarios(cuil)
 );
 
 

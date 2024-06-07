@@ -1,45 +1,19 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: ./frontend
-    volumes:
-      - ./frontend:/frontend
-    ports:
-      - "5000:5000"
-    command: python /frontend/app.py
-  
-  
-  backend:
-    build: 
-      context: ./backend
-    volumes:
-      - ./backend:/backend
-    ports:
-      - '5001:5000'
-    environment:
-      - MYSQL_HOST=db
-      - MYSQL_USER=root 
-      - MYSQL_PASSWORD=developers
-      - MYSQL_DB=tpintro
-    command: python /backend/app.py
-    depends_on:
-      - db
-  
   db:
     image: mysql:latest
-    container_name: db
-    restart: always
-    ports:
-      - '3307:3306'
+    container_name: tpintrods
     environment:
-      MYSQL_DATABASE: tpintro
       MYSQL_ROOT_PASSWORD: developers
+      MYSQL_DATABASE: tpintro_dev
+      MYSQL_USER: usuario
+      MYSQL_PASSWORD: developers
+    ports:
+      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./mysql:/docker-entrypoint-initdb.d   #./init.sql:/docker-entrypoint-initdb.d/init.sql
-
+      - ./backend/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   db_data:
