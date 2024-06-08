@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 
 app = Flask(__name__)
-engine = create_engine("mysql+mysqlconnector://root:developers@localhost/tpintro")
+engine = create_engine("mysql+mysqlconnector://usuario:developers@localhost/tpintro_dev")
 
 @app.route('/users/<dni>', methods = ['GET'])
 def get_usuario(dni):
@@ -46,31 +46,50 @@ def crear_usuario():
     
     return jsonify({'message': 'se ha agregado correctamente' + query}), 201
 
-@app.route('/aeropuertos', methods = ['GET'])
-def aeropuertos():
-    conn = engine.connect()
-    
-    query = "SELECT * FROM aeropuertos;"
-    try:
-        #Se debe usar text para poder adecuarla al execute de mysql-connector
-        result = conn.execute(text(query))
-        #Se hace commit de la consulta (acá no estoy seguro si es necesario para un select, sí es necesario para un insert!)
-        conn.commit()
-        conn.close() #Cerramos la conexion con la base de datos
-    except SQLAlchemyError as err:
-        return jsonify(str(err.__cause__))
-    
-    #Se preparan los datos para ser mostrador como json
-    data = []
-    for row in result:
-        entity = {}
-        entity['codigo_aeropuerto'] = row.codigo_aeropuerto
-        entity['nombre_aeropuerto'] = row.nombre_aeropuerto
-        entity['ciudad'] = row.ciudad
-        entity['pais'] = row.pais
-        data.append(entity)
 
-    return jsonify(data), 200
+# aeropuertos esta listo
+@app.route('/aeropuertos', methods=['GET'])
+def aeropuertos():
+    try:
+        conn = engine.connect()
+        query = "SELECT * FROM aeropuertos;"
+        result = conn.execute(text(query))
+        data = [
+            {
+                'codigo_aeropuerto': row[0],
+                'nombre_aeropuerto': row[1],
+                'ciudad': row[2],
+                'pais': row[3]
+            } for row in result
+        ]
+        conn.close()
+        return jsonify(data), 200
+    except SQLAlchemyError as err:
+        conn.close()
+        return jsonify({'message': f'Ocurrio un error: {str(err.__cause__)}'}), 500
+    
+# sumar-aeropuertos esta listo.    
+@app.route('/sumar-aeropuerto', methods=['POST'])
+def sumar_aeropuerto():
+    conn = engine.connect()
+    new_aeropuerto = request.get_json()
+    query = text("""
+        INSERT INTO aeropuertos (codigo_aeropuerto, nombre_aeropuerto, ciudad, pais)
+        VALUES (:codigo_aeropuerto, :nombre_aeropuerto, :ciudad, :pais)
+    """)
+    try:
+        result = conn.execute(query, {
+            'codigo_aeropuerto': new_aeropuerto['codigo_aeropuerto'],
+            'nombre_aeropuerto': new_aeropuerto['nombre_aeropuerto'],
+            'ciudad': new_aeropuerto['ciudad'],
+            'pais': new_aeropuerto['pais']
+        })
+        conn.commit()
+        conn.close()
+        return jsonify({'message': 'Se ha agregado correctamente'}), 201
+    except SQLAlchemyError as err:
+        conn.close()
+        return jsonify({'message': f'Se ha producido un error: {str(err.__cause__)}'}), 500
 
 @app.route('/vuelos', methods = ['GET'])
 def vuelos():
