@@ -29,6 +29,26 @@ def modificar_aeropuertos(codigo_aeropuerto):
         return jsonify({'message': str(err.__cause__)})
     return jsonify({'message': 'se ha modificado correctamente' + query}), 200
 
+@app.route('/eliminar-aeropuerto/<codigo_aeropuerto', methods = ['DELETE'])
+def delete_aeropuerto(codigo_aeropuerto):
+    conn = engine.connect()
+    query = f"""DELETE FROM aeropuertos
+            WHERE codigo = {codigo_aeropuerto};
+            """
+    validation_query = f"SELECT * FROM aeropuertos WHERE codigo = {codigo_aeropuerto}"
+    try:
+        val_result = conn.execute(text(validation_query))
+        if val_result.rowcount != 0 :
+            result = conn.execute(text(query))
+            conn.commit()
+            conn.close()
+        else:
+            conn.close()
+            return jsonify({"message": "El aeropuerto no existe"}), 404
+    except SQLAlchemyError as err:
+        jsonify(str(err.__cause__))
+    return jsonify({'message': 'Se ha eliminado correctamente'}), 202
+
 @app.route('/users/<dni>', methods = ['GET'])
 def get_usuario(dni):
     conn = engine.connect()
