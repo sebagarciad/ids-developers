@@ -8,14 +8,14 @@ from sqlalchemy.exc import SQLAlchemyError
 app = Flask(__name__)
 engine = create_engine("mysql+mysqlconnector://usuario:developers@localhost/tpintro_dev")
 
-@app.route('/aeropuertos/<codigo_aeropuerto>', methods = ['PATCH'])
-def modificar_aeropuertos(codigo_aeropuerto):
+@app.route('/modificar-aeropuerto/<codigo_aeropuerto>', methods = ['PATCH'])
+def modificar_aeropuerto(codigo_aeropuerto):
     conn = engine.connect()
     mod_user = request.get_json()
     query = f"""UPDATE aeropuertos 
             SET nombre = '{mod_user['nombre']} , ciudad = '{mod_user['ciudad']}' , pais = '{mod_user['pais']}'
             WHERE codigo = {codigo_aeropuerto};"""
-    query_validation = "SELECT * FROM aeropuertos WHERE codigo = {codigo_aeropuerto};"
+    query_validation = f"SELECT * FROM aeropuertos WHERE codigo = {codigo_aeropuerto};"
     try:
         validation_result = conn.execute(text(query_validation))
         if validation_result.rowcount!=0:
@@ -29,13 +29,11 @@ def modificar_aeropuertos(codigo_aeropuerto):
         return jsonify({'message': str(err.__cause__)})
     return jsonify({'message': 'se ha modificado correctamente' + query}), 200
 
-@app.route('/eliminar-aeropuerto/<codigo_aeropuerto', methods = ['DELETE'])
+@app.route('/eliminar-aeropuerto/<codigo_aeropuerto>', methods = ['DELETE'])
 def delete_aeropuerto(codigo_aeropuerto):
     conn = engine.connect()
-    query = f"""DELETE FROM aeropuertos
-            WHERE codigo = {codigo_aeropuerto};
-            """
-    validation_query = f"SELECT * FROM aeropuertos WHERE codigo = {codigo_aeropuerto}"
+    query = f"DELETE FROM aeropuertos WHERE codigo = {codigo_aeropuerto};"
+    validation_query = f"SELECT * FROM aeropuertos WHERE codigo = {codigo_aeropuerto};"
     try:
         val_result = conn.execute(text(validation_query))
         if val_result.rowcount != 0 :
@@ -52,7 +50,7 @@ def delete_aeropuerto(codigo_aeropuerto):
 @app.route('/users/<dni>', methods = ['GET'])
 def get_usuario(dni):
     conn = engine.connect()
-    query = "SELECT * FROM usuarios where dni = {dni};"
+    query = f"SELECT * FROM usuarios where dni = {dni};"
     try:
         result = conn.execute(text(query))
         conn.commit()
