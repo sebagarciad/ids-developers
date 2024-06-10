@@ -87,6 +87,23 @@ def crear_usuario():
     
     return jsonify({'message': 'se ha agregado correctamente' + query}), 201
 
+@app.route('/eliminar-usuario/<dni>', methods = ['DELETE'])
+def delete_usuario(dni):
+    conn = engine.connect()
+    query = f"DELETE FROM usuarios WHERE dni = {dni};"
+    validation_query = f"SELECT * FROM usuarios WHERE dni = {dni}"
+    try:
+        val_result = conn.execute(text(validation_query))
+        if val_result.rowcount != 0 :
+            result = conn.execute(text(query))
+            conn.commit()
+            conn.close()
+        else:
+            conn.close()
+            return jsonify({"message": "El usuario no existe"}), 404
+    except SQLAlchemyError as err:
+        jsonify(str(err.__cause__))
+    return jsonify({'message': 'Se ha eliminado correctamente'}), 202
 
 # aeropuertos esta listo
 @app.route('/aeropuertos', methods=['GET'])
