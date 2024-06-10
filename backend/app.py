@@ -8,6 +8,27 @@ from sqlalchemy.exc import SQLAlchemyError
 app = Flask(__name__)
 engine = create_engine("mysql+mysqlconnector://usuario:developers@localhost/tpintro_dev")
 
+@app.route('/aeropuertos/<codigo_aeropuerto>', methods = ['PATCH'])
+def modificar_aeropuertos(codigo_aeropuerto):
+    conn = engine.connect()
+    mod_user = request.get_json()
+    query = f"""UPDATE aeropuertos 
+            SET nombre = '{mod_user['nombre']} , ciudad = '{mod_user['ciudad']}' , pais = '{mod_user['pais']}'
+            WHERE codigo = {codigo_aeropuerto};"""
+    query_validation = "SELECT * FROM aeropuertos WHERE codigo = {codigo_aeropuerto};"
+    try:
+        validation_result = conn.execute(text(query_validation))
+        if validation_result.rowcount!=0:
+            result = conn.execute(text(query))
+            conn.commit()
+            conn.close()
+        else:
+            conn.close()
+            return jsonify({'message': "El aeropuerto no existe"}), 404
+    except SQLAlchemyError as err:
+        return jsonify({'message': str(err.__cause__)})
+    return jsonify({'message': 'se ha modificado correctamente' + query}), 200
+
 @app.route('/users/<dni>', methods = ['GET'])
 def get_usuario(dni):
     conn = engine.connect()
