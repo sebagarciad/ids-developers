@@ -13,7 +13,7 @@ def modificar_aeropuerto(codigo_aeropuerto):
     conn = engine.connect()
     mod_user = request.get_json()
     query = f"""UPDATE aeropuertos 
-            SET nombre = '{mod_user['nombre']} , ciudad = '{mod_user['ciudad']}' , pais = '{mod_user['pais']}'
+            SET nombre = '{mod_user['nombre']}' , ciudad = '{mod_user['ciudad']}' , pais = '{mod_user['pais']}'
             WHERE codigo = {codigo_aeropuerto};"""
     query_validation = f"SELECT * FROM aeropuertos WHERE codigo = {codigo_aeropuerto};"
     try:
