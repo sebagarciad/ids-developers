@@ -212,7 +212,7 @@ def transacciones():
                 'num_transaccion': row[0],
                 'in_vuelo': row[1],
                 'total_transaccion': row[2],
-                'cuil': row[3]
+                'dni': row[3]
             } for row in result
         ]
         conn.close()
@@ -226,21 +226,21 @@ def crear_transaccion():
     conn = engine.connect()
     new_transaccion = request.get_json()
     query = text("""
-        INSERT INTO transacciones (num_transaccion, id_vuelo, total_transaccion, cuil)
-        VALUES (:num_transaccion, :id_vuelo, :total_transaccion, :cuil)
+        INSERT INTO transacciones (num_transaccion, id_vuelo, total_transaccion, dni)
+        VALUES (:num_transaccion, :id_vuelo, :total_transaccion, :dni)
     """)
     try:
         result = conn.execute(query, {
             'num_transaccion': new_transaccion['num_transaccion'],
             'id_vuelo': new_transaccion['id_vuelo'],
             'total_transaccion': new_transaccion['total_transaccion'],
-            'cuil': new_transaccion['cuil']
+            'dni': new_transaccion['dni']
         })
         conn.commit()
         conn.close()
         return jsonify({'message': 'Se ha agregado correctamente'}), 201
     except IntegrityError as err:
-        conn.rollback()  # Rollback the transaction in case of integrity error
+        conn.rollback()
         conn.close()
         return jsonify({'message': f'Se ha producido un error de integridad: {str(err)}'}), 400
     except KeyError as err:
