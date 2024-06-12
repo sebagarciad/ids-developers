@@ -5,8 +5,6 @@ import re
 app = Flask(__name__)
 
 
-
-#Renderiza home
 @app.route("/", methods=["GET", "POST"])
 def home():
     fecha_actual = datetime.now().date()
@@ -31,12 +29,7 @@ def home():
         return redirect(url_for("resultados_busqueda", desde=desde, hasta=hasta, fecha=fecha))
     return render_template('index.html')
 
-@app.route("/prueba")
-def prueba():
-    desde = request.args.get("desde", None)
-    hasta = request.args.get("hasta", None)
-    fecha = request.args.get("fecha", None)
-    return render_template("prueba.html", desde=desde, hasta=hasta, fecha=fecha)
+
 
 @app.route("/informacion-usuario", methods=["GET", "POST"])
 def info_usuario():
@@ -63,6 +56,7 @@ def info_usuario():
     
     return render_template('informacion-usuario.html')
 
+
 @app.route("/resultados-de-busqueda")
 def resultados_busqueda():
     origen = 'Buenos Aires'
@@ -79,6 +73,7 @@ def resultados_busqueda():
             return render_template('no-resultados.html')
     return render_template('resultados-de-busqueda.html', origen=origen, destino=destino, nro_vuelo=nro_vuelo, duracion=duracion, hora_salida=hora_salida, hora_llegada=hora_llegada, precio=precio, fecha=fecha)
 
+
 @app.route("/compra-confirmada", methods=["GET"])
 def compra_confirmada():
     origen = 'Buenos Aires'
@@ -94,6 +89,7 @@ def compra_confirmada():
     dni = '12345678'
     mail = 'example@gmail.com'
     return render_template('compra-confirmada.html', origen=origen, destino=destino, nro_vuelo=nro_vuelo, duracion=duracion, hora_salida=hora_salida, hora_llegada=hora_llegada, precio=precio, fecha=fecha, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
+
 
 @app.route('/pago', methods=["GET", "POST"])
 def pago():
@@ -120,6 +116,7 @@ def pago():
 
 
     return render_template('pago.html')
+
 
 @app.errorhandler(404)
 def page_not_found(e):
