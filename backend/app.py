@@ -174,15 +174,14 @@ def vuelos():
 
     return jsonify(data), 200
 
-@app.route('/agregar_vuelo', methods = ['POST'])
+@app.route('/agregar-vuelo', methods = ['POST'])
 def agregar_vuelo():
     conn = engine.connect()
     nuevo_vuelo = request.get_json()
-    if 'codigo_aeropuerto_origen' not in nuevo_vuelo or 'codigo_aeropuerto_destino' not in nuevo_vuelo:
-        return jsonify({'message': 'Los campos codigo_aeropuerto_origen y codigo_aeropuerto_destino son obligatorios.'}), 400
     query = text("""
         INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, hora_salida, hora_llegada, duracion, precio, pasajes_disponibles)
         VALUES (:codigo_aeropuerto_origen, :codigo_aeropuerto_destino, :hora_salida, :hora_llegada, :duracion, :precio, :pasajes_disponibles)
+
     """)
     try:
         result = conn.execute(query, {
@@ -192,14 +191,21 @@ def agregar_vuelo():
             'hora_llegada': nuevo_vuelo['hora_llegada'],
             'duracion': nuevo_vuelo['duracion'],
             'precio': nuevo_vuelo['precio'],
-            'pasajes_disponibles': nuevo_vuelo['pasajes_disponibles'],
+            'pasajes_disponibles': nuevo_vuelo['pasajes_disponibles']
         })
         conn.commit()
         conn.close()
+        return jsonify({'message': 'Se ha agregado correctamente'}), 201
+    except IntegrityError as err:
+        conn.rollback()
+        conn.close()
+        return jsonify({'message': f'Se ha producido un error de integridad: {str(err)}'}), 400
+    except KeyError as err:
+        conn.close()
+        return jsonify({'message': f'Se ha producido un error: Faltan campos requeridos ({str(err)})'}), 400
     except SQLAlchemyError as err:
-        return jsonify({'message': 'Se ha producido un error: ' + str(err._cause_)}), 500
-    
-    return jsonify({'message': 'Se ha agregado correctamente'}), 201
+        conn.close()
+        return jsonify({'message': f'Se ha producido un error: {str(err.cause)}'}), 500
 
 @app.route('/transacciones', methods = ['GET'])
 def transacciones():
