@@ -160,7 +160,7 @@ def vuelos():
         conn.commit()
         conn.close()
     except SQLAlchemyError as err:
-        return jsonify(str(err.__cause__))
+        return jsonify(str(err._cause_))
 
     data = []
     for row in result:
