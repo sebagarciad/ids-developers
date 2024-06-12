@@ -101,7 +101,7 @@ def delete_usuario(dni):
             conn.close()
             return jsonify({"message": "El usuario no existe"}), 404
     except SQLAlchemyError as err:
-        jsonify(str(err.__cause__))
+        return jsonify(str(err.__cause__)), 500
     return jsonify({'message': 'Se ha eliminado correctamente'}), 202
 
 # aeropuertos esta listo
@@ -250,6 +250,48 @@ def crear_transaccion():
         conn.close()
         return jsonify({'message': f'Se ha producido un error: {str(err.__cause__)}'}), 500
 
+@app.route('/transacciones/<num_transaccion>', methods = ['PATCH'])
+def modificar_transacciones(num_transaccion):
+    conn = engine.connect()
+    mod_user = request.get_json()
+    query = text("""
+            UPDATE transacciones
+            SET id_vuelo = :id_vuelo, total_transaccion = :total_transaccion, cuil = :cuil
+            WHERE num_transaccion = :num_transaccion
+            """)
+    query_validation = f"SELECT * FROM transacciones WHERE num_transaccion = {num_transaccion};"
+    try:
+        val_result = conn.execute(text(query_validation))
+        if val_result.rowcount!=0:
+            result = conn.execute(text(query))
+            conn.commit()
+            conn.close()
+        else:
+            conn.close()
+            return jsonify({'message': "La transacción no existe"}), 404
+    except SQLAlchemyError as err:
+        return jsonify({'message': str(err.__cause__)})
+    return jsonify({'message': 'La transacción se ha modificado correctamente' + query}), 200
+
+@app.route('/transacciones/<num_transaccion>', methods = ['DELETE'])
+def delete_user(num_transaccion):
+    conn = engine.connect()
+    query = f"""DELETE FROM transacciones
+            WHERE num_transaccion = {num_transaccion};
+            """
+    validation_query = f"SELECT * FROM transacciones WHERE num_transaccion = {num_transaccion}"
+    try:
+        val_result = conn.execute(text(validation_query))
+        if val_result.rowcount != 0 :
+            result = conn.execute(text(query))
+            conn.commit()
+            conn.close()
+        else:
+            conn.close()
+            return jsonify({"message": "La transaccion no existe"}), 404
+    except SQLAlchemyError as err:
+        return jsonify(str(err.__cause__)), 500
+    return jsonify({'message': 'Se ha eliminado correctamente'}), 202
 
 @app.route('/vuelos/<id_vuelo>', methods = ['PATCH'])
 def actualizar_vuelo(id_vuelo):
