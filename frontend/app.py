@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
 import re
+import requests
 
 app = Flask(__name__)
 
@@ -52,7 +53,19 @@ def info_usuario():
         if errores_validacion:
             return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
         
-        return redirect(url_for("pago", nombre=nombre, apellido=apellido, dni=dni, mail=mail))
+        datos_usuarios = {
+            "dni": dni,
+            "nombre": nombre,
+            "apellido": apellido,
+            "mail": mail
+        }
+
+        api_response = requests.post("http://localhost:8080/crear-usuario", json=datos_usuarios)
+
+        if api_response.status_code == 201:
+            return redirect(url_for("pago", nombre=nombre, apellido=apellido, dni=dni, mail=mail))
+        else:
+            return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
     
     return render_template('informacion-usuario.html')
 
@@ -124,4 +137,4 @@ def page_not_found(e):
 
 
 if __name__ == "__main__":
-    app.run("127.0.0.1", port="5000", debug=True)
+    app.run("127.0.0.1", port="5001", debug=True)
