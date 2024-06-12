@@ -264,17 +264,22 @@ def crear_transaccion():
 @app.route('/transacciones/<num_transaccion>', methods = ['PATCH'])
 def modificar_transacciones(num_transaccion):
     conn = engine.connect()
-    mod_user = request.get_json()
+    mod_transaccion = request.get_json()
     query = text("""
             UPDATE transacciones
-            SET id_vuelo = :id_vuelo, total_transaccion = :total_transaccion, cuil = :cuil
+            SET id_vuelo = :id_vuelo, total_transaccion = :total_transaccion, dni = :dni
             WHERE num_transaccion = :num_transaccion
             """)
     query_validation = f"SELECT * FROM transacciones WHERE num_transaccion = {num_transaccion};"
     try:
         val_result = conn.execute(text(query_validation))
         if val_result.rowcount!=0:
-            result = conn.execute(text(query))
+            result = conn.execute(query, {
+            'id_vuelo': mod_transaccion['id_vuelo'],
+            'total_transaccion': mod_transaccion['total_transaccion'],
+            'dni': mod_transaccion['dni'],
+            'num_transaccion': num_transaccion
+        })
             conn.commit()
             conn.close()
         else:
@@ -282,10 +287,10 @@ def modificar_transacciones(num_transaccion):
             return jsonify({'message': "La transacción no existe"}), 404
     except SQLAlchemyError as err:
         return jsonify({'message': str(err.__cause__)})
-    return jsonify({'message': 'La transacción se ha modificado correctamente' + query}), 200
+    return jsonify({'message': 'La transacción se ha modificado correctamente'}), 200
 
 @app.route('/transacciones/<num_transaccion>', methods = ['DELETE'])
-def delete_user(num_transaccion):
+def delete_transaccion(num_transaccion):
     conn = engine.connect()
     query = f"""DELETE FROM transacciones
             WHERE num_transaccion = {num_transaccion};
