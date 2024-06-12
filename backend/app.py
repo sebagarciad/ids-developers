@@ -89,6 +89,27 @@ def crear_usuario():
         return jsonify({'message': 'Se ha agregado correctamente'}), 201
     except SQLAlchemyError as err:
         return jsonify({'message': 'Se ha producido un error' + str(err.__cause__)})
+    
+@app.route('/users/<dni>', methods = ['PATCH'])
+def actualizar_usuario(dni):
+    conn = engine.connect()
+    mod_user = request.get_json()
+    query = f"""UPDATE usuarios 
+            SET nombre = "{mod_user['nombre']}" , apellido = "{mod_user['apellido']}" , mail = "{mod_user['mail']}"
+            WHERE dni = {dni};"""
+    query_validation = f"SELECT * FROM usuarios WHERE dni = {dni};"
+    try:
+        validation_result = conn.execute(text(query_validation))
+        if validation_result.rowcount!=0:
+            result = conn.execute(text(query))
+            conn.commit()
+            conn.close()
+        else:
+            conn.close()
+            return jsonify({'message': "El usuario no existe"}), 404
+    except SQLAlchemyError as err:
+        return jsonify({'message': str(err.__cause__)})
+    return jsonify({'message': 'El usuario se ha modificado correctamente' + query}), 200    
 
 @app.route('/eliminar-usuario/<dni>', methods = ['DELETE'])
 def delete_usuario(dni):
