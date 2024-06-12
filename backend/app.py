@@ -73,7 +73,7 @@ def crear_usuario():
     new_user = request.get_json()
     #Se crea la query en base a los datos pasados por el endpoint.
     #Los mismos deben viajar en el body en formato JSON
-    query = f"""INSERT INTO usuarios (nombre, apellido, dni, mail) VALUES '{new_user["nombre"]}', '{new_user["apellido"]}', '{new_user["dni"]}', '{new_user["mail"]}';"""
+    query = f"""INSERT INTO usuarios (nombre, apellido, dni, mail) VALUES ('{new_user["nombre"]}', '{new_user["apellido"]}', '{new_user["dni"]}', '{new_user["mail"]}');"""
     try:
         result = conn.execute(text(query))
         #Una vez ejecutada la consulta, se debe hacer commit de la misma para que
