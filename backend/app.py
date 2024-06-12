@@ -72,19 +72,22 @@ def get_usuario(dni):
 def crear_usuario():
     conn = engine.connect()
     new_user = request.get_json()
-    #Se crea la query en base a los datos pasados por el endpoint.
-    #Los mismos deben viajar en el body en formato JSON
-    query = f"""INSERT INTO usuarios (nombre, apellido, dni, mail) VALUES ('{new_user["nombre"]}', '{new_user["apellido"]}', '{new_user["dni"]}', '{new_user["mail"]}');"""
+    query = text("""
+                INSERT INTO usuarios (nombre, apellido, dni, mail) 
+                VALUES (:nombre, :apellido, :dni, :mail) 
+                """)
     try:
-        result = conn.execute(text(query))
-        #Una vez ejecutada la consulta, se debe hacer commit de la misma para que
-        #se aplique en la base de datos.
+        result = conn.execute(query, {
+            'dni': new_user['dni'],
+            'nombre': new_user['nombre'],
+            'apellido': new_user['apellido'],
+            'mail': new_user['mail']
+        })
         conn.commit()
         conn.close()
+        return jsonify({'message': 'Se ha agregado correctamente'}), 201
     except SQLAlchemyError as err:
         return jsonify({'message': 'Se ha producido un error' + str(err.__cause__)})
-    
-    return jsonify({'message': 'se ha agregado correctamente' + query}), 201
 
 @app.route('/eliminar-usuario/<dni>', methods = ['DELETE'])
 def delete_usuario(dni):
