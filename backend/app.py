@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.exc import IntegrityError
+from datetime import timedelta
 
 
 app = Flask(__name__)
@@ -160,19 +161,20 @@ def vuelos():
         conn.commit()
         conn.close()
     except SQLAlchemyError as err:
-        return jsonify(str(err._cause_))
+        return jsonify(str(err._cause_)), 500
 
     data = []
     for row in result:
-        entity = {}
-        entity['id_vuelo'] = row.id_vuelo
-        entity['codigo_aeropuerto_origen'] = row.codigo_aeropuerto_origen
-        entity['codigo_aeropuerto_destino'] = row.codigo_aeropuerto_destino
-        entity['hora_salida'] = row.hora_salida
-        entity['hora_llegada'] = row.hora_llegada
-        entity['duracion'] = row.duracion
-        entity['precio'] = row.precio
-        entity['pasajes_disponibles'] = row.pasajes_disponibles
+        entity = {
+            'id_vuelo': row.id_vuelo,
+            'codigo_aeropuerto_origen': row.codigo_aeropuerto_origen,
+            'codigo_aeropuerto_destino': row.codigo_aeropuerto_destino,
+            'hora_salida': row.hora_salida,
+            'hora_llegada': row.hora_llegada,
+            'duracion': str(row.duracion) if isinstance(row.duracion, timedelta) else row.duracion,
+            'precio': row.precio,
+            'pasajes_disponibles': row.pasajes_disponibles
+        }
         data.append(entity)
 
     return jsonify(data), 200
@@ -306,31 +308,47 @@ def delete_user(num_transaccion):
 def actualizar_vuelo(id_vuelo):
     conn = engine.connect()
     act_vuelo = request.get_json()
-    query = f"""
+    
+    query = text("""
         UPDATE vuelos SET 
-        pasajes_disponibles = '{act_vuelo['pasajes_disponibles']}', 
-        codigo_aeropuerto_origen = '{act_vuelo['codigo_aeropuerto_origen']}', 
-        codigo_aeropuerto_destino = '{act_vuelo['codigo_aeropuerto_destino']}', 
-        hora_salida = '{act_vuelo['hora_salida']}', 
-        hora_llegada = '{act_vuelo['hora_llegada']}', 
-        duracion = '{act_vuelo['duracion']}', 
-        precio = '{act_vuelo['precio']}'
-        WHERE id_vuelo = {id_vuelo};
-    """
-    query_validation = f"SELECT * FROM vuelos WHERE id_vuelo = {id_vuelo}"
+        pasajes_disponibles = :pasajes_disponibles, 
+        codigo_aeropuerto_origen = :codigo_aeropuerto_origen, 
+        codigo_aeropuerto_destino = :codigo_aeropuerto_destino, 
+        hora_salida = :hora_salida, 
+        hora_llegada = :hora_llegada, 
+        duracion = :duracion, 
+        precio = :precio
+        WHERE id_vuelo = :id_vuelo
+    """)
+    
+    query_validation = text("SELECT * FROM vuelos WHERE id_vuelo = :id_vuelo")
     
     try:
-        validation_result = conn.execute(text(query_validation))
-        if validation_result.rowcount!=0:
-            result = conn.execute(text(query))
+        validation_result = conn.execute(query_validation, {'id_vuelo': id_vuelo})
+        
+        if validation_result.rowcount != 0:
+            conn.execute(query, {
+                'pasajes_disponibles': act_vuelo['pasajes_disponibles'],
+                'codigo_aeropuerto_origen': act_vuelo['codigo_aeropuerto_origen'],
+                'codigo_aeropuerto_destino': act_vuelo['codigo_aeropuerto_destino'],
+                'hora_salida': act_vuelo['hora_salida'],
+                'hora_llegada': act_vuelo['hora_llegada'],
+                'duracion': act_vuelo['duracion'],
+                'precio': act_vuelo['precio'],
+                'id_vuelo': id_vuelo
+            })
             conn.commit()
-            conn.close()
+            message = 'se ha modificado correctamente'
         else:
-            conn.close()
-            return jsonify({'message': "El vuelo no existe"}), 404
+            message = 'El vuelo no existe'
+            return jsonify({'message': message}), 404
     except SQLAlchemyError as err:
-        return jsonify({'message': str(err._cause_)})
-    return jsonify({'message': 'se ha modificado correctamente' + query}), 200
+        conn.rollback()
+        return jsonify({'message': str(err)}), 500
+    finally:
+        conn.close()
+    
+    return jsonify({'message': message}), 200
 
 @app.route('/vuelos/<id_vuelo>', methods = ['DELETE'])
 def delete_vuelo(id_vuelo):
