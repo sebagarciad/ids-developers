@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS vuelos (
     codigo_aeropuerto_destino VARCHAR(3),
     hora_salida DATETIME,
     hora_llegada DATETIME,
-    duracion INT,
+    duracion TIME,
     precio DECIMAL(10, 2),
     pasajes_disponibles INT,
     FOREIGN KEY (codigo_aeropuerto_origen) REFERENCES aeropuertos(codigo_aeropuerto),
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS vuelos (
 
 
 CREATE TABLE IF NOT EXISTS usuarios (
-    cuil INT PRIMARY KEY,
+    dni INT PRIMARY KEY,
     nombre VARCHAR(30),
     apellido VARCHAR(30),
     mail VARCHAR(40) 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS transacciones (
     num_transaccion INT AUTO_INCREMENT PRIMARY KEY,
     id_vuelo INT,
     total_transaccion DECIMAL(10, 2),
-    cuil INT,
+    dni INT,
     FOREIGN KEY (id_vuelo) REFERENCES vuelos(id_vuelo),
-    FOREIGN KEY (cuil) REFERENCES usuarios(cuil)
+    FOREIGN KEY (dni) REFERENCES usuarios(dni)
 );
