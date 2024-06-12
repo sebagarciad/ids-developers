@@ -60,9 +60,9 @@ def get_usuario(dni):
     if result.rowcount !=0:
         data = {}
         row = result.first()
-        data['nombre'] = row[0]
-        data['apellido'] = row[1]
-        data['dni'] = row[2]
+        data['dni'] = row[0]
+        data['nombre'] = row[1]
+        data['apellido'] = row[2]
         data['mail'] = row[3]
         return jsonify(data), 200
     return jsonify({"message": "El usuario no existe"}), 404
