@@ -54,7 +54,7 @@
                                             </div>
                                             </section>
                                         </div>
-                                        <div class="col-xxs-12 mt alternate">
+                                        <div class="col-xxs-10 mt alternate">
                                             <section>
                                             <div class="input-field">
                                                 <label for="class">Titular de la Tarjeta</label>
@@ -64,6 +64,23 @@
 												{% endif %}
                                             </div>
                                             </section>
+                                        </div>
+                                        <div class="col-xxs-10 mt alternate">
+                                            <section>
+                                            <div class="input-field">
+                                                <label for="class">DNI del TItular de la tarjeta</label>
+                                                <input type="text" class="form-control" id="dni-titular-tarjeta" name="dni-titular-tarjeta" placeholder="- - - - - - - -" />
+                                                {% if errores_validacion and errores_validacion.get("dni_titular") %}
+													<div class="alert alert-danger">{{ errores_validacion.get("dni_titular") }}</div>
+												{% endif %}
+                                            </div>
+                                            </section>
+                                        </div>
+                                        <div class="col-xxs-12 col-xs-6 mt">
+                                            <div class="input-field">
+                                                <label for="date-start">Precio del pasaje:</label>
+                                                <p id="resultado">$50000</p>
+                                            </div>
                                         </div>
                                         <div class="col-xs-12">
                                             <input type="submit" class="btn btn-primary btn-block" value="Continuar">

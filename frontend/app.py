@@ -98,6 +98,7 @@ def pago():
         numero_tarjeta = request.form.get("numero-tarjeta")
         vencimiento = request.form.get("vencimiento")
         codigo_seguridad = request.form.get("codigo-seguridad")
+        dni_titular_tarjeta = request.form.get("dni-titular-tarjeta")
 
         errores_validacion = {}
         if not nombre_titular:
@@ -108,11 +109,12 @@ def pago():
             errores_validacion["vencimiento"] = "La fecha de vencimiento debe ser válida"
         if not codigo_seguridad or not len(codigo_seguridad) == 3:
             errores_validacion["codigo_seguridad"] = "El código de seguridad debe ser válido"
-        
+        if not dni_titular_tarjeta or not 7 <= len(dni_titular_tarjeta) <= 8:
+            errores_validacion["dni_titular"] = "Ingresar un DNI valido."
         if errores_validacion:
             return render_template('pago.html', errores_validacion=errores_validacion, nombre_titular=nombre_titular, numero_tarjeta=numero_tarjeta, vencimiento=vencimiento, codigo_seguridad=codigo_seguridad)
         
-        return redirect(url_for("compra_confirmada", nombre_titular=nombre_titular, numero_tarjeta=numero_tarjeta, vencimiento=vencimiento, codigo_seguridad=codigo_seguridad))
+        return redirect(url_for("compra_confirmada", nombre_titular=nombre_titular, numero_tarjeta=numero_tarjeta, vencimiento=vencimiento, codigo_seguridad=codigo_seguridad, dni_titular_tarjeta=dni_titular_tarjeta))
 
 
     return render_template('pago.html')
