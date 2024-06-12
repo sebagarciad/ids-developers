@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import IntegrityError
 
 
 app = Flask(__name__)
@@ -173,44 +174,81 @@ def vuelos():
 
     return jsonify(data), 200
 
-@app.route('/transacciones', methods = ['GET'])
-def transacciones():
+@app.route('/agregar_vuelo', methods = ['POST'])
+def agregar_vuelo():
     conn = engine.connect()
-    query = "SELECT * FROM transacciones"
+    nuevo_vuelo = request.get_json()
+    if 'codigo_aeropuerto_origen' not in nuevo_vuelo or 'codigo_aeropuerto_destino' not in nuevo_vuelo:
+        return jsonify({'message': 'Los campos codigo_aeropuerto_origen y codigo_aeropuerto_destino son obligatorios.'}), 400
+    query = text("""
+        INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, hora_salida, hora_llegada, duracion, precio, pasajes_disponibles)
+        VALUES (:codigo_aeropuerto_origen, :codigo_aeropuerto_destino, :hora_salida, :hora_llegada, :duracion, :precio, :pasajes_disponibles)
+    """)
     try:
-        result = conn.execute(text(query))
+        result = conn.execute(query, {
+            'codigo_aeropuerto_origen': nuevo_vuelo['codigo_aeropuerto_origen'],
+            'codigo_aeropuerto_destino': nuevo_vuelo['codigo_aeropuerto_destino'],
+            'hora_salida': nuevo_vuelo['hora_salida'],
+            'hora_llegada': nuevo_vuelo['hora_llegada'],
+            'duracion': nuevo_vuelo['duracion'],
+            'precio': nuevo_vuelo['precio'],
+            'pasajes_disponibles': nuevo_vuelo['pasajes_disponibles'],
+        })
         conn.commit()
         conn.close()
     except SQLAlchemyError as err:
-        return jsonify(str(err.__cause__))
+        return jsonify({'message': 'Se ha producido un error: ' + str(err._cause_)}), 500
     
-    data = []
-    for row in result:
-        entity = {}
-        entity['num_transaccion'] = row.num_transaccion
-        entity['id_vuelo'] = row.id_vuelo
-        entity['total_transaccion'] = row.total_transaccion
-        data.append(entity)
+    return jsonify({'message': 'Se ha agregado correctamente'}), 201
 
-    return jsonify(data), 200
+@app.route('/transacciones', methods = ['GET'])
+def transacciones():
+    try:
+        conn = engine.connect()
+        query = "SELECT * FROM transacciones;"
+        result = conn.execute(text(query))
+        data = [
+            {
+                'num_transaccion': row[0],
+                'in_vuelo': row[1],
+                'total_transaccion': row[2],
+                'cuil': row[3]
+            } for row in result
+        ]
+        conn.close()
+        return jsonify(data), 200
+    except SQLAlchemyError as err:
+        conn.close()
+        return jsonify({'message': f'Ocurrio un error: {str(err.__cause__)}'}), 500
 
 @app.route('/crear_transaccion', methods = ['POST'])
 def crear_transaccion():
     conn = engine.connect()
-    nueva_transaccion = request.get_json()
-    #Se crea la query en base a los datos pasados por el endpoint.
-    #Los mismos deben viajar en el body en formato JSON
-    query = f"""INSERT INTO transacciones (id_vuelo, total_transaccion) VALUES '{nueva_transaccion["id_vuelo"]}', '{nueva_transaccion["total_transaccion"]}';"""
+    new_transaccion = request.get_json()
+    query = text("""
+        INSERT INTO transacciones (num_transaccion, id_vuelo, total_transaccion, cuil)
+        VALUES (:num_transaccion, :id_vuelo, :total_transaccion, :cuil)
+    """)
     try:
-        result = conn.execute(text(query))
-        #Una vez ejecutada la consulta, se debe hacer commit de la misma para que
-        #se aplique en la base de datos.
+        result = conn.execute(query, {
+            'num_transaccion': new_transaccion['num_transaccion'],
+            'id_vuelo': new_transaccion['id_vuelo'],
+            'total_transaccion': new_transaccion['total_transaccion'],
+            'cuil': new_transaccion['cuil']
+        })
         conn.commit()
         conn.close()
+        return jsonify({'message': 'Se ha agregado correctamente'}), 201
+    except IntegrityError as err:
+        conn.rollback()  # Rollback the transaction in case of integrity error
+        conn.close()
+        return jsonify({'message': f'Se ha producido un error de integridad: {str(err)}'}), 400
+    except KeyError as err:
+        conn.close()
+        return jsonify({'message': f'Se ha producido un error: Faltan campos requeridos ({str(err)})'}), 400
     except SQLAlchemyError as err:
-        return jsonify({'message': 'Se ha producido un error' + str(err.__cause__)})
-    
-    return jsonify({'message': 'se ha agregado correctamente' + query}), 201
+        conn.close()
+        return jsonify({'message': f'Se ha producido un error: {str(err.__cause__)}'}), 500
 
 
 @app.route('/vuelos/<id_vuelo>', methods = ['PATCH'])
