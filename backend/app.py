@@ -302,19 +302,26 @@ def delete_user(num_transaccion):
         return jsonify(str(err.__cause__)), 500
     return jsonify({'message': 'Se ha eliminado correctamente'}), 202
 
-@app.route('/vuelos/<id_vuelo>', methods = ['PATCH'])
+@app.route('/actualizar-vuelos/<id_vuelo>', methods = ['PATCH'])
 def actualizar_vuelo(id_vuelo):
     conn = engine.connect()
-    mod_vuelo = request.get_json()
-    #De la misma manera que con el metodo POST los datos a modificar deberán
-    #Ser enviados por medio del body de la request
-    query = f"""UPDATE users SET pasajes_disponibles = '{mod_vuelo['pasajes_disponibles']}'
-                WHERE id_vuelo = {id_vuelo};
-            """
-    query_validation = f"SELECT * FROM vuelos WHERE id_vuelos = {id_vuelo};"
+    act_vuelo = request.get_json()
+    query = f"""
+        UPDATE vuelos SET 
+        pasajes_disponibles = '{act_vuelo['pasajes_disponibles']}', 
+        codigo_aeropuerto_origen = '{act_vuelo['codigo_aeropuerto_origen']}', 
+        codigo_aeropuerto_destino = '{act_vuelo['codigo_aeropuerto_destino']}', 
+        hora_salida = '{act_vuelo['hora_salida']}', 
+        hora_llegada = '{act_vuelo['hora_llegada']}', 
+        duracion = '{act_vuelo['duracion']}', 
+        precio = '{act_vuelo['precio']}'
+        WHERE id_vuelo = {id_vuelo};
+    """
+    query_validation = f"SELECT * FROM vuelos WHERE id_vuelo = {id_vuelo}"
+    
     try:
-        val_result = conn.execute(text(query_validation))
-        if val_result.rowcount!=0:
+        validation_result = conn.execute(text(query_validation))
+        if validation_result.rowcount!=0:
             result = conn.execute(text(query))
             conn.commit()
             conn.close()
@@ -322,7 +329,7 @@ def actualizar_vuelo(id_vuelo):
             conn.close()
             return jsonify({'message': "El vuelo no existe"}), 404
     except SQLAlchemyError as err:
-        return jsonify({'message': str(err.__cause__)})
+        return jsonify({'message': str(err._cause_)})
     return jsonify({'message': 'se ha modificado correctamente' + query}), 200
 
 @app.route('/vuelos/<id_vuelo>', methods = ['DELETE'])
