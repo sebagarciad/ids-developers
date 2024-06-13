@@ -78,20 +78,56 @@ def info_usuario():
 
 @app.route("/resultados-de-busqueda")
 def resultados_busqueda():
-    origen = 'Buenos Aires'
-    destino = 'Córdoba'
-    nro_vuelo = 'AR1549'
-    duracion = '1 hora 15 minutos'
-    hora_salida = '15:00 hs'
-    hora_llegada = '16:15 hs'
-    precio = '$45000'
-    fecha = '4/6/2024'
-    informacion = [origen, destino, nro_vuelo, duracion, hora_salida, hora_llegada, precio, fecha]
-    for elemento in informacion:
-        if not elemento:
-            return render_template('no-resultados.html')
-    return render_template('resultados-de-busqueda.html', origen=origen, destino=destino, nro_vuelo=nro_vuelo, duracion=duracion, hora_salida=hora_salida, hora_llegada=hora_llegada, precio=precio, fecha=fecha)
+    desde = request.args.get('desde')
+    hasta = request.args.get('hasta')
+    fecha = request.args.get('fecha')
 
+    if not desde or not hasta or not fecha:
+        current_app.logger.error('Missing parameters: desde, hasta, or fecha')
+        return render_template('no-resultados.html')
+
+    try:
+        response = requests.get('http://localhost:8080/vuelos')
+        response.raise_for_status()
+        vuelos_data = response.json()
+    except requests.exceptions.RequestException as e:
+        current_app.logger.error(f'Error fetching vuelos: {e}')
+        return str(e), 500
+
+    try:
+        vuelos_filtrados = [
+            vuelo for vuelo in vuelos_data
+            if vuelo['codigo_aeropuerto_origen'] == desde and
+               vuelo['codigo_aeropuerto_destino'] == hasta and
+               vuelo['fecha_salida'] == fecha
+        ]
+
+        if not vuelos_filtrados:
+            current_app.logger.info('No vuelos found matching the criteria')
+            return render_template('no-resultados.html')
+
+        vuelo = vuelos_filtrados[0]
+        origen = vuelo['codigo_aeropuerto_origen']
+        destino = vuelo['codigo_aeropuerto_destino']
+        nro_vuelo = vuelo['id_vuelo']
+        fecha_salida = vuelo['fecha_salida']
+        fecha_llegada = vuelo['fecha_llegada']
+        hora_salida = vuelo['hora_salida']
+        hora_llegada = vuelo['hora_llegada']
+        precio = vuelo['precio']
+
+        return render_template(
+            'resultados-de-busqueda.html', 
+            origen=origen, destino=destino, nro_vuelo=nro_vuelo, 
+            fecha_salida=fecha_salida, fecha_llegada=fecha_llegada, hora_salida=hora_salida, hora_llegada=hora_llegada, 
+            precio=precio, fecha=fecha
+        )
+    except KeyError as e:
+        current_app.logger.error(f'Key error: {e}')
+        return str(e), 500
+    except Exception as e:
+        current_app.logger.error(f'Unexpected error: {e}')
+        return str(e), 500
 
 @app.route("/compra-confirmada", methods=["GET"])
 def compra_confirmada():
