@@ -11,12 +11,56 @@ import requests
 app = Flask(__name__)
 engine = create_engine("mysql+mysqlconnector://usuario:developers@localhost/tpintro_dev")
 
+# aeropuertos esta listo
+@app.route('/aeropuertos', methods=['GET'])
+def aeropuertos():
+    try:
+        conn = engine.connect()
+        query = "SELECT * FROM aeropuertos;"
+        result = conn.execute(text(query))
+        data = [
+            {
+                'codigo_aeropuerto': row[0],
+                'nombre_aeropuerto': row[1],
+                'ciudad': row[2],
+                'pais': row[3]
+            } for row in result
+        ]
+        conn.close()
+        return jsonify(data), 200
+    except SQLAlchemyError as err:
+        conn.close()
+        return jsonify({'message': f'Ocurrio un error: {str(err.__cause__)}'}), 500
+    
+# sumar-aeropuertos esta listo.    
+@app.route('/sumar-aeropuerto', methods=['POST'])
+def sumar_aeropuerto():
+    conn = engine.connect()
+    new_aeropuerto = request.get_json()
+    query = text("""
+        INSERT INTO aeropuertos (codigo_aeropuerto, nombre_aeropuerto, ciudad, pais)
+        VALUES (:codigo_aeropuerto, :nombre_aeropuerto, :ciudad, :pais)
+    """)
+    try:
+        result = conn.execute(query, {
+            'codigo_aeropuerto': new_aeropuerto['codigo_aeropuerto'],
+            'nombre_aeropuerto': new_aeropuerto['nombre_aeropuerto'],
+            'ciudad': new_aeropuerto['ciudad'],
+            'pais': new_aeropuerto['pais']
+        })
+        conn.commit()
+        conn.close()
+        return jsonify({'message': 'Se ha agregado correctamente'}), 201
+    except SQLAlchemyError as err:
+        conn.close()
+        return jsonify({'message': f'Se ha producido un error: {str(err.__cause__)}'}), 500
+
 @app.route('/modificar-aeropuerto/<codigo_aeropuerto>', methods = ['PATCH'])
 def modificar_aeropuerto(codigo_aeropuerto):
     conn = engine.connect()
     mod_user = request.get_json()
     query = f"""UPDATE aeropuertos 
-            SET nombre_aeropuerto = '{mod_user['nombre_aeropuerto']} , ciudad = '{mod_user['ciudad']}' , pais = '{mod_user['pais']}'
+            SET nombre_aeropuerto = '{mod_user['nombre_aeropuerto']}' , ciudad = '{mod_user['ciudad']}' , pais = '{mod_user['pais']}'
             WHERE codigo_aeropuerto = {codigo_aeropuerto};"""
     query_validation = f"SELECT * FROM aeropuertos WHERE codigo_aeropuerto = {codigo_aeropuerto};"
     try:
@@ -129,50 +173,6 @@ def delete_usuario(dni):
     except SQLAlchemyError as err:
         return jsonify(str(err.__cause__)), 500
     return jsonify({'message': 'Se ha eliminado correctamente'}), 202
-
-# aeropuertos esta listo
-@app.route('/aeropuertos', methods=['GET'])
-def aeropuertos():
-    try:
-        conn = engine.connect()
-        query = "SELECT * FROM aeropuertos;"
-        result = conn.execute(text(query))
-        data = [
-            {
-                'codigo_aeropuerto': row[0],
-                'nombre_aeropuerto': row[1],
-                'ciudad': row[2],
-                'pais': row[3]
-            } for row in result
-        ]
-        conn.close()
-        return jsonify(data), 200
-    except SQLAlchemyError as err:
-        conn.close()
-        return jsonify({'message': f'Ocurrio un error: {str(err.__cause__)}'}), 500
-    
-# sumar-aeropuertos esta listo.    
-@app.route('/sumar-aeropuerto', methods=['POST'])
-def sumar_aeropuerto():
-    conn = engine.connect()
-    new_aeropuerto = request.get_json()
-    query = text("""
-        INSERT INTO aeropuertos (codigo_aeropuerto, nombre_aeropuerto, ciudad, pais)
-        VALUES (:codigo_aeropuerto, :nombre_aeropuerto, :ciudad, :pais)
-    """)
-    try:
-        result = conn.execute(query, {
-            'codigo_aeropuerto': new_aeropuerto['codigo_aeropuerto'],
-            'nombre_aeropuerto': new_aeropuerto['nombre_aeropuerto'],
-            'ciudad': new_aeropuerto['ciudad'],
-            'pais': new_aeropuerto['pais']
-        })
-        conn.commit()
-        conn.close()
-        return jsonify({'message': 'Se ha agregado correctamente'}), 201
-    except SQLAlchemyError as err:
-        conn.close()
-        return jsonify({'message': f'Se ha producido un error: {str(err.__cause__)}'}), 500
 
 @app.route('/vuelos', methods = ['GET'])
 def vuelos():
