@@ -31,7 +31,7 @@
 														<label for="class">Desde:</label>
 														<select class="cs-select cs-skin-border" name="desde">
 															<option value=""  disabled selected>Seleccione una opción</option>
-															<option value="Buenos Aires">Buenos Aires</option>
+															<option value="BUE">Buenos Aires</option>
 														</select>
 													</section>
 													{% if error_vacio and error_vacio.get("desde") %}
@@ -43,10 +43,12 @@
 														<label for="class">Hasta:</label>
 														<select class="cs-select cs-skin-border" name="hasta">
 															<option value="" disabled selected>Seleccione una opción</option>
-															<option value="Cordoba" >Cordoba</option>
-															<option value="Bariloche" >Bariloche</option>
-															<option value="Misiones" >Misiones</option>
-															<option value="Ushuaia" >Ushuaia</option>
+															<option value="COR" >Cordoba</option>
+															<option value="BCR" >Bariloche</option>
+															<option value="MDZ" >Mendoza</option>
+															<option value="USH" >Ushuaia</option>
+															<option value="NQN" >Neuquen</option>
+															<option value="SLA" >Salta</option>
 														</select>
 													</section>
 													{% if error_vacio and error_vacio.get("hasta") %}

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, current_app
 from datetime import datetime
 import re
 import requests
@@ -13,20 +13,26 @@ def home():
         desde = request.form.get("desde")
         hasta = request.form.get("hasta")
         fecha = request.form.get("fecha")
+
+        error_vacio = {}
+        if desde is None:
+            error_vacio["desde"] = "Debe elegir una opción"
+        if hasta is None:
+            error_vacio["hasta"] = "Debe elegir una opción"
+
         try:
             mes, dia, año = fecha.split("/")
-        except ValueError:
-            pass
-        error_vacio = {}
-        if desde == None:
-            error_vacio["desde"] = "Debe elegir una opción"
-        if hasta == None:
-            error_vacio["hasta"] = "Debe elegir una opción"
-        if not fecha or fecha_actual > datetime(int(año), int(mes), int(dia)).date():
+            fecha_input = datetime(int(año), int(mes), int(dia)).date()
+            if fecha_actual > fecha_input:
+                error_vacio["fecha"] = "Debe elegir una opción valida"
+            else:
+                fecha = fecha_input.strftime('%Y-%m-%d')
+        except (ValueError, TypeError):
             error_vacio["fecha"] = "Debe elegir una opción valida"
-        
+
         if error_vacio:
             return render_template('index.html', error_vacio=error_vacio, desde=desde, hasta=hasta, fecha=fecha)
+        
         return redirect(url_for("resultados_busqueda", desde=desde, hasta=hasta, fecha=fecha))
     return render_template('index.html')
 
