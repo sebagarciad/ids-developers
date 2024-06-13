@@ -174,7 +174,7 @@ def delete_usuario(dni):
         return jsonify(str(err.__cause__)), 500
     return jsonify({'message': 'Se ha eliminado correctamente'}), 202
 
-@app.route('/vuelos', methods = ['GET'])
+@app.route('/vuelos', methods=['GET'])
 def vuelos():
     conn = engine.connect()
     query = "SELECT * FROM vuelos"
@@ -183,7 +183,7 @@ def vuelos():
         conn.commit()
         conn.close()
     except SQLAlchemyError as err:
-        return jsonify(str(err._cause_)), 500
+        return jsonify(str(err.cause)), 500
 
     data = []
     for row in result:
@@ -191,9 +191,10 @@ def vuelos():
             'id_vuelo': row.id_vuelo,
             'codigo_aeropuerto_origen': row.codigo_aeropuerto_origen,
             'codigo_aeropuerto_destino': row.codigo_aeropuerto_destino,
-            'hora_salida': row.hora_salida,
-            'hora_llegada': row.hora_llegada,
-            'duracion': str(row.duracion) if isinstance(row.duracion, timedelta) else row.duracion,
+            'fecha_salida': row.fecha_salida.strftime('%Y-%m-%d'),
+            'fecha_llegada': row.fecha_llegada.strftime('%Y-%m-%d'),
+            'hora_salida': str(row.hora_salida),
+            'hora_llegada': str(row.hora_llegada),
             'precio': row.precio,
             'pasajes_disponibles': row.pasajes_disponibles
         }
