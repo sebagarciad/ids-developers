@@ -1,55 +1,146 @@
 {% extends "base.html" %}
-{% block body %}
-<style>
+{% block body %} 
+		
 
-    .datos {
-      text-align: center;
-    }
-    
-    .lista {
-      display: inline-block;
-      text-align: left;
-      font-size: 20px;
-    }
+		<!-- end:header-top -->
+	
+		<div class="fh5co-hero">
+			<div class="fh5co-overlay"></div>
+			<div class="fh5co-cover" data-stellar-background-ratio="0.5" style="background-image: url(images/cover_bg_1.jpg);">
+				<div class="desc">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-5 col-md-12">
+								<div class="tabulation animate-box">
 
-    #recuadro{  
-    width: 460px; 
-    height: 600px;
-    margin: 75px auto;
-    border-radius: 10px;  
-    padding-top: 30px;
-    padding-bottom: 20px;  
-    background-color: rgba(255, 102, 0, 0.637); 
-    box-shadow: 2px 2px 45px 0px rgba(48,48,48,0.64);      
-    }
-</style>
-<div id="recuadro">
-    <div class="datos">
-        <h1><strong>Compra confirmada</strong></h1>
-        </br>
-        </br>
-        <h3>Datos personales:</h3>
-        <ul class="lista">
-            {% for dato, valor in datos_personales.items() %}
-                <li>{{dato}}: {{valor}}</li>
-                </br>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="datos">
-        <h3>Datos del vuelo:</h3>    
-        <ul class="lista">
-            {% for dato, valor in datos_vuelo.items() %}
-                <li>{{dato}}: {{valor}}</li>
-                </br>
-            {% endfor %}
-        </ul>    
-        </br>
-        </br> 
-        </br>
-    </div> 
-</div>
-</br>
-</br> 
+								  <!-- Nav tabs -->
+								   <ul class="nav nav-tabs" role="tablist">
+								      <li role="presentation" class="active">
+								      	<a href="#compra-confirmada" aria-controls="compra-confirmada" role="tab" data-toggle="tab">Detalles de su pasaje</a>
+								      </li>
+								 
+								   </ul>
 
-{% endblock %}
+								   <!-- Tab panes -->
+									<div class="tab-content">
+										<div role="tabpanel" class="tab-pane active" id="infousuario">
+										   <div class="row">
+                                            <div class="col-xxs-12 col-xs-6 mt">
+												<section>
+													<label for="class">Nombre pasajero:</label>
+													<p id="resultado">{{nombre}}</p>
+												</section>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt alternate">
+												<section>
+													<label for="class">Apellido pasajero:</label>
+													<p id="resultado">{{apellido}}</p>
+												</section>
+											</div>
+                                            <div class="col-xxs-12 col-xs-6 mt">
+												<section>
+													<label for="class">DNI:</label>
+													<p id="resultado">{{dni}}</p>
+												</section>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt alternate">
+												<section>
+													<label for="class">Mail:</label>
+													<p id="resultado">{{mail}}</p>
+												</section>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<section>
+													<label for="class">Desde:</label>
+													<p id="resultado">{{origen}}</p>
+												</section>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt alternate">
+												<section>
+													<label for="class">Hacia:</label>
+													<p id="resultado">{{destino}}</p>
+												</section>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="class">Número de vuelo:</label>
+													<p id="resultado">{{nro_vuelo}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt alternate">
+												<section>
+													<label for="class">Duración:</label>
+													<p id="resultado">{{duracion}}</p>
+												</section>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="date-start">Fecha del vuelo:</label>
+													<p id="resultado">{{fecha}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="date-start">Precio del pasaje:</label>
+													<p id="resultado">{{precio}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="date-start">Hora de partida:</label>
+													<p id="resultado">{{hora_salida}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<section>
+													<label for="class">Horar de arribo:</label>
+													<p id="resultado">{{hora_llegada}}</p>
+												</section>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- END fh5co-page -->
+
+	</div>
+	<!-- END fh5co-wrapper -->
+
+	<!-- jQuery -->
+
+
+	<script src="{{url_for('static', filename='/js/jquery.min.js', _external=True)}}"></script>
+	<!-- jQuery Easing -->
+	<script src="{{url_for('static', filename='/js/jquery.easing.1.3.js', _external=True)}}"></script>
+	<!-- Bootstrap -->
+	<script src="{{url_for('static', filename='/js/bootstrap.min.js', _external=True)}}"></script>
+	<!-- Waypoints -->
+	<script src="{{url_for('static', filename='/js/jquery.waypoints.min.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/sticky.js', _external=True)}}"></script>
+
+	<!-- Stellar -->
+	<script src="{{url_for('static', filename='/js/jquery.stellar.min.js', _external=True)}}"></script>
+	<!-- Superfish -->
+	<script src="{{url_for('static', filename='/js/hoverIntent.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/superfish.js', _external=True)}}"></script>
+	<!-- Magnific Popup -->
+	<script src="{{url_for('static', filename='/js/jquery.magnific-popup.min.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/magnific-popup-options.js', _external=True)}}"></script>
+	<!-- Date Picker -->
+	<script src="{{url_for('static', filename='/js/bootstrap-datepicker.min.js', _external=True)}}"></script>
+	<!-- CS Select -->
+	<script src="{{url_for('static', filename='/js/classie.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/selectFx.js', _external=True)}}"></script>
+	
+	<!-- Main JS -->
+	<script src="{{url_for('static', filename='/js/main.js', _external=True)}}"></script>
+
+	{% endblock %}
+

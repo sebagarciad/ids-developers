@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block body %} 
+		
+
+		<!-- end:header-top -->
+<style>
+    .error {
+        font-weight: 900;
+        }
+</style>
+		<div class="fh5co-hero">
+			<div class="fh5co-overlay"></div>
+			<div class="fh5co-cover" data-stellar-background-ratio="0.5" style="background-image: url(images/cover_bg_1.jpg);">
+				<div class="desc">
+					<div class="container">
+                        <div class="row2">
+                            <div class="desc2 animate-box">
+                                <div class="col-sm-7 col-sm-push-1 col-md-10 col-md-push-1">
+                                    <div class="no-vuelos-disponibles">
+                                        <h1 class="error">ERROR 404</h1>
+                                        <a href="{{ url_for('home', _external=True)}}"><button class="btn btn-primary btn-block">Volver al home</button></a>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	
+
+	</div>
+	<!-- END fh5co-page -->
+
+	</div>
+	<!-- END fh5co-wrapper -->
+
+	<!-- jQuery -->
+
+
+	<script src="{{url_for('static', filename='/js/jquery.min.js', _external=True)}}"></script>
+	<!-- jQuery Easing -->
+	<script src="{{url_for('static', filename='/js/jquery.easing.1.3.js', _external=True)}}"></script>
+	<!-- Bootstrap -->
+	<script src="{{url_for('static', filename='/js/bootstrap.min.js', _external=True)}}"></script>
+	<!-- Waypoints -->
+	<script src="{{url_for('static', filename='/js/jquery.waypoints.min.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/sticky.js', _external=True)}}"></script>
+
+	<!-- Stellar -->
+	<script src="{{url_for('static', filename='/js/jquery.stellar.min.js', _external=True)}}"></script>
+	<!-- Superfish -->
+	<script src="{{url_for('static', filename='/js/hoverIntent.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/superfish.js', _external=True)}}"></script>
+	<!-- Magnific Popup -->
+	<script src="{{url_for('static', filename='/js/jquery.magnific-popup.min.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/magnific-popup-options.js', _external=True)}}"></script>
+	<!-- Date Picker -->
+	<script src="{{url_for('static', filename='/js/bootstrap-datepicker.min.js', _external=True)}}"></script>
+	<!-- CS Select -->
+	<script src="{{url_for('static', filename='/js/classie.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/selectFx.js', _external=True)}}"></script>
+	
+	<!-- Main JS -->
+	<script src="{{url_for('static', filename='/js/main.js', _external=True)}}"></script>
+
+	{% endblock %}
+

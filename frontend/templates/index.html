@@ -28,16 +28,19 @@
 												<form action="{{url_for('home')}}" method="post">
 												<div class="col-sm-12 mt">
 													<section>
-														<label for="class">From:</label>
+														<label for="class">Desde:</label>
 														<select class="cs-select cs-skin-border" name="desde">
 															<option value=""  disabled selected>Seleccione una opción</option>
 															<option value="Buenos Aires">Buenos Aires</option>
 														</select>
 													</section>
+													{% if error_vacio and error_vacio.get("desde") %}
+														<div class="alert alert-danger">{{ error_vacio.get("desde") }}</div>
+													{% endif %}
 												</div>
 												<div class="col-xxs-12 col-xs-6 mt">
 													<section>
-														<label for="class">To:</label>
+														<label for="class">Hasta:</label>
 														<select class="cs-select cs-skin-border" name="hasta">
 															<option value="" disabled selected>Seleccione una opción</option>
 															<option value="Cordoba" >Cordoba</option>
@@ -46,24 +49,18 @@
 															<option value="Ushuaia" >Ushuaia</option>
 														</select>
 													</section>
+													{% if error_vacio and error_vacio.get("hasta") %}
+														<div class="alert alert-danger">{{ error_vacio.get("hasta") }}</div>
+													{% endif %}
 												</div>
 												<div class="col-xxs-12 col-xs-6 mt alternate">
 													<div class="input-field">
 														<label for="date-start">Check In:</label>
 														<input type="text" class="form-control" id="date-start" placeholder="mm/dd/yyyy" name="fecha"/>
+														{% if error_vacio and error_vacio.get("fecha") %}
+														<div class="alert alert-danger">{{ error_vacio.get("fecha") }}</div>
+														{% endif %}
 													</div>
-												</div>
-												<div class="col-xxs-12 col-xs-6 mt">
-													<section>
-														<label for="class">Adult:</label>
-														<select class="cs-select cs-skin-border" name="adultos">
-															<option value="" disabled selected>Seleccione una opción</option>
-															<option value="1">1</option>
-															<option value="2">2</option>
-															<option value="3">3</option>
-															<option value="4">4</option>
-														</select>
-													</section>
 												</div>
 												<div class="col-xs-12">
 													<input type="submit" class="btn btn-primary btn-block" value="Search Flight">
