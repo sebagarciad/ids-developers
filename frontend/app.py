@@ -175,6 +175,23 @@ def pago():
 
     return render_template('pago.html')
 
+@app.route('/buscar-reserva', methods = ["GET", "POST"])
+def buscar_reserva():
+    if request.method == "POST":
+        dni = request.form.get("dni")
+        nro_transaccion = request.form.get("nro_transaccion")
+
+        error_vacio = {}
+        if not dni:
+            error_vacio["dni"] = "Debe ingresar DNI"
+        if not nro_transaccion:
+            error_vacio["nro_transaccion"] = "Debe ingresar el número de pasaje"
+        if error_vacio:
+            return render_template('buscar-reserva.html', error_vacio=error_vacio, dni=dni, nro_transaccion=nro_transaccion)
+        
+        return render_template('mi-reserva.html', dni=dni, nro_transaccion=nro_transaccion)
+    return render_template('buscar-reserva.html')
+
 
 @app.errorhandler(404)
 def page_not_found(e):
