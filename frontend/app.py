@@ -5,7 +5,6 @@ import requests
 
 app = Flask(__name__)
 
-
 @app.route("/", methods=["GET", "POST"])
 def home():
     fecha_actual = datetime.now().date()
@@ -35,46 +34,6 @@ def home():
         
         return redirect(url_for("resultados_busqueda", desde=desde, hasta=hasta, fecha=fecha))
     return render_template('index.html')
-
-
-
-@app.route("/informacion-usuario", methods=["GET", "POST"])
-def info_usuario():
-    if request.method == "POST":
-        nombre = request.form.get("nombre")
-        apellido = request.form.get("apellido")
-        dni = request.form.get("dni")
-        mail = request.form.get("mail")
-        
-        errores_validacion = {}
-        if not nombre:
-            errores_validacion["nombre"] = "El nombre es obligatorio"
-        if not apellido:
-            errores_validacion["apellido"] = "El apellido es obligatorio"
-        if not dni or not 7 <= len(dni) <= 8:
-            errores_validacion["dni"] = "Ingresar un DNI valido."
-        if not mail or not re.match(r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$', mail):
-            errores_validacion["mail"] = "Ingresar una direccion de correo electronico valida"
-
-        if errores_validacion:
-            return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
-        
-        datos_usuarios = {
-            "dni": dni,
-            "nombre": nombre,
-            "apellido": apellido,
-            "mail": mail
-        }
-
-        api_response = requests.post("http://localhost:8080/usuarios", json=datos_usuarios)
-
-        if api_response.status_code == 201:
-            return redirect(url_for("pago", nombre=nombre, apellido=apellido, dni=dni, mail=mail))
-        else:
-            return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
-    
-    return render_template('informacion-usuario.html')
-
 
 @app.route("/resultados-de-busqueda")
 def resultados_busqueda():
@@ -130,6 +89,44 @@ def resultados_busqueda():
         current_app.logger.error(f'Unexpected error: {e}')
         return str(e), 500
 
+@app.route("/informacion-usuario", methods=["GET", "POST"])
+def info_usuario():
+    if request.method == "POST":
+        nombre = request.form.get("nombre")
+        apellido = request.form.get("apellido")
+        dni = request.form.get("dni")
+        mail = request.form.get("mail")
+        
+        errores_validacion = {}
+        if not nombre:
+            errores_validacion["nombre"] = "El nombre es obligatorio"
+        if not apellido:
+            errores_validacion["apellido"] = "El apellido es obligatorio"
+        if not dni or not 7 <= len(dni) <= 8:
+            errores_validacion["dni"] = "Ingresar un DNI valido."
+        if not mail or not re.match(r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$', mail):
+            errores_validacion["mail"] = "Ingresar una direccion de correo electronico valida"
+
+        if errores_validacion:
+            return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
+        
+        datos_usuarios = {
+            "dni": dni,
+            "nombre": nombre,
+            "apellido": apellido,
+            "mail": mail
+        }
+
+        api_response = requests.post("http://localhost:8080/usuarios", json=datos_usuarios)
+
+        if api_response.status_code == 201:
+            return redirect(url_for("pago", nombre=nombre, apellido=apellido, dni=dni, mail=mail))
+        else:
+            return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
+    
+    return render_template('informacion-usuario.html')
+
+
 @app.route("/compra-confirmada", methods=["GET"])
 def compra_confirmada():
     origen = 'Buenos Aires'
@@ -145,7 +142,6 @@ def compra_confirmada():
     dni = '12345678'
     mail = 'example@gmail.com'
     return render_template('compra-confirmada.html', origen=origen, destino=destino, nro_vuelo=nro_vuelo, duracion=duracion, hora_salida=hora_salida, hora_llegada=hora_llegada, precio=precio, fecha=fecha, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
-
 
 @app.route('/pago', methods=["GET", "POST"])
 def pago():
