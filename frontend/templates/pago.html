@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+
+{% block title %}Información del Pago - Fiuba Airlines{% endblock %}
+
 {% block body %}
 
 <div class="fh5co-hero">
@@ -6,8 +9,8 @@
     <div class="fh5co-cover" data-stellar-background-ratio="0.5" style="background-image: url(images/cover_bg_1.jpg);">
         <div class="desc">
             <div class="container">
-                <div class="row">
-                    <div class="col-sm-5 col-md-8">
+                <div class="row col-sm-6">
+                    <div class="col-sm-12 col-md-12">
                         <div class="tabulation animate-box">
 
                           
@@ -76,22 +79,120 @@
                                             </div>
                                             </section>
                                         </div>
-                                        <div class="col-xxs-12 col-xs-6 mt">
-                                            <div class="input-field">
-                                                <label for="date-start">Precio del pasaje:</label>
-                                                <p id="resultado">$50000</p>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="col-xs-12">
                                             <input type="submit" class="btn btn-primary btn-block" value="Continuar">
                                         </div>
                                         </form>
                                     </div>
+                                    
                                  </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+                <div class="row col-sm-6">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="tabulation animate-box">
+
+                          
+                           <ul class="nav nav-tabs detalles" role="tablist">
+                              <li role="presentation" class="active">
+                                  <a href="#info-pago" aria-controls="info-pago" role="tab" data-toggle="tab">Detalles de facturación</a>
+                              </li>
+                         
+                           </ul>
+                            <div class="tab-content-detalles">
+                                 <div role="tabpanel" class="tab-pane active" id="flights">
+                                    <div class="row">
+                                        <div class="col-xxs-6 col-xs-6 mt alternate">
+                                            <section>
+                                                <div class="col-xxs-12 col-xs-12 mt">
+                                                    <div class="input-field text-center">
+                                                        <label for="date-start">Nombre y apellido</label>
+                                                        <p id="resultado">Juan Perez</p>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="col-xxs-6 col-xs-6 mt alternate">
+                                            <section>
+                                                <div class="col-xxs-12 col-xs-12 mt">
+                                                    <div class="input-field text-center">
+                                                        <label for="date-start">DNI</label>
+                                                        <p id="resultado">12345678</p>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="col-xxs-6 col-xs-6 mt alternate">
+                                            <section>
+                                                <div class="col-xxs-12 col-xs-12 mt">
+                                                    <div class="input-field text-center">
+                                                        <label for="date-start">Fecha de salida</label>
+                                                        <p id="resultado">20/07/2024</p>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="col-xxs-6 col-xs-6 mt alternate">
+                                            <section>
+                                                <div class="col-xxs-12 col-xs-12 mt">
+                                                    <div class="input-field text-center">
+                                                        <label for="date-start">Fecha de llegada</label>
+                                                        <p id="resultado">20/07/2024</p>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="col-xxs-6 col-xs-6 mt alternate lugares">
+                                            <section>
+                                                <div class="col-xxs-12 col-xs-12 mt precio">
+                                                    <div class="input-field text-center">
+                                                        <label for="date-start">Origen</label>
+                                                        <p id="resultado">Buenos Aires</p>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="col-xxs-6 col-xs-6 mt alternate lugares">
+                                            <section>
+                                                <div class="col-xxs-12 col-xs-12 mt precio">
+                                                    <div class="input-field text-center">
+                                                        <label for="date-start">Destino</label>
+                                                        <p id="resultado">Cordoba</p>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+
+                                        <div class="col-xxs-12 col-xs-12 mt precio">
+                                            <div class="input-field text-center">
+                                                <label for="date-start">Precio del pasaje:</label>
+                                                <p id="resultado">$50000</p>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                    
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+                <style>
+                    .tab-content-detalles {
+                    padding: 2px;
+                    }
+                    .detalles, .lugares{
+                        margin-bottom: 10px;
+                    }
+                    .precio{
+                        margin-bottom: 0px;
+                    }
+                </style>             
             </div>
         </div>
     </div>
