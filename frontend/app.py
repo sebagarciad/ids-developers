@@ -178,8 +178,8 @@ def buscar_reserva():
         nro_transaccion = request.form.get("nro_transaccion")
 
         error_vacio = {}
-        if not dni:
-            error_vacio["dni"] = "Debe ingresar DNI"
+        if not dni or not 7 <= len(dni) <= 8:
+            error_vacio["dni"] = "Ingresar un DNI valido."
         if not nro_transaccion:
             error_vacio["nro_transaccion"] = "Debe ingresar el número de pasaje"
         if error_vacio:
