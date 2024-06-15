@@ -114,13 +114,14 @@ def resultados_busqueda():
         fecha_llegada = vuelo['fecha_llegada']
         hora_salida = vuelo['hora_salida']
         hora_llegada = vuelo['hora_llegada']
+        duracion = vuelo['duracion']
         precio = vuelo['precio']
 
         return render_template(
             'resultados-de-busqueda.html', 
             origen=origen, destino=destino, nro_vuelo=nro_vuelo, 
             fecha_salida=fecha_salida, fecha_llegada=fecha_llegada, hora_salida=hora_salida, hora_llegada=hora_llegada, 
-            precio=precio, fecha=fecha
+            duracion=duracion, precio=precio, fecha=fecha
         )
     except KeyError as e:
         current_app.logger.error(f'Key error: {e}')

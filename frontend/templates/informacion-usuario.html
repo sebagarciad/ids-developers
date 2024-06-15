@@ -29,7 +29,7 @@
 											<div class="col-sm-12 mt">
 												<section>
 													<label for="class">Nombre:</label>
-													<input type="text" id="nombre" name="nombre" placeholder="Juan">
+													<input type="text" id="nombre" name="nombre" placeholder="Nombre">
 													{% if errores_validacion and errores_validacion.get("nombre") %}
 														<div class="alert alert-danger">{{ errores_validacion.get("nombre") }}</div>
 													{% endif %}
@@ -38,7 +38,7 @@
 											<div class="col-sm-12 mt">
 												<section>
 													<label for="class">Apellido:</label>
-													<input type="text" id="apellido" name="apellido" placeholder="Perez">
+													<input type="text" id="apellido" name="apellido" placeholder="Apellido">
 													{% if errores_validacion and errores_validacion.get("apellido") %}
 														<div class="alert alert-danger">{{ errores_validacion.get("apellido") }}</div>
 													{% endif %}
@@ -56,7 +56,7 @@
 											<div class="col-sm-12 mt">
 												<section>
 													<label for="class">Correo electronico:</label>
-													<input type="text" id="mail" name="mail" placeholder="juanperez@gmail.com">
+													<input type="text" id="mail" name="mail" placeholder="ejemplo@gmail.com">
 													{% if errores_validacion and errores_validacion.get("mail") %}
 														<div class="alert alert-danger">{{ errores_validacion.get("mail") }}</div>
 													{% endif %}
