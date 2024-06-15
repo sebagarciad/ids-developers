@@ -94,6 +94,24 @@ def delete_aeropuerto(codigo_aeropuerto):
         jsonify(str(err.__cause__))
     return jsonify({'message': 'Se ha eliminado correctamente'}), 202
 
+@app.route('/usuarios', methods=['GET'])
+def usuarios():
+    try:
+        with engine.connect() as conn:
+            query = "SELECT * FROM usuarios;"
+            result = conn.execute(text(query))
+            data = [
+                {
+                    'dni': row[0],
+                    'nombre': row[1],
+                    'apellido': row[2],
+                    'mail': row[3]
+                } for row in result
+            ]
+            return jsonify(data), 200
+    except SQLAlchemyError as e:
+        return jsonify({'message': f'Error en la base de datos: {str(e)}'}), 500
+
 @app.route('/usuarios/<dni>', methods = ['GET'])
 def get_usuario(dni):
     conn = engine.connect()
