@@ -534,7 +534,7 @@ figure {
 .tabulation {
   width: 100%;
   float: left;
-  margin-top: -7em;
+  margin-top: -12em;
   background: rgba(255, 255, 255, 0.95);
   -webkit-box-shadow: 0px 43px 83px -20px rgba(0, 0, 0, 0.41);
   -moz-box-shadow: 0px 43px 83px -20px rgba(0, 0, 0, 0.41);
@@ -1985,8 +1985,8 @@ div.cs-select span {
 #resultado {
   color: rgba(0, 0, 0, 0.5);
   font-family: "Open Sans";
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 /*# sourceMappingURL=style.css.map */

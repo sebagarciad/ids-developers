@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block body %} 
 		
-
 		<!-- end:header-top -->
 	
 		<div class="fh5co-hero">
@@ -25,78 +24,79 @@
 									<div class="tab-content">
 										<div role="tabpanel" class="tab-pane active" id="infousuario">
 										   <div class="row">
-                                            <div class="col-xxs-12 col-xs-6 mt">
+                                            <div class="col-xxs-12 col-xs-4 mt">
 												<section>
 													<label for="class">Nombre pasajero:</label>
-													<p id="resultado">{{nombre}}</p>
+													<p id="resultado" class="info">{{nombre}}</p>
 												</section>
 											</div>
-											<div class="col-xxs-12 col-xs-6 mt alternate">
+											<div class="col-xxs-12 col-xs-4 mt alternate">
 												<section>
 													<label for="class">Apellido pasajero:</label>
-													<p id="resultado">{{apellido}}</p>
+													<p id="resultado" class="info">{{apellido}}</p>
 												</section>
 											</div>
-                                            <div class="col-xxs-12 col-xs-6 mt">
+                                            <div class="col-xxs-12 col-xs-4 mt">
 												<section>
 													<label for="class">DNI:</label>
-													<p id="resultado">{{dni}}</p>
+													<p id="resultado" class="info">{{dni}}</p>
 												</section>
 											</div>
-											<div class="col-xxs-12 col-xs-6 mt alternate">
+											<div class="col-xxs-12 col-xs-4 mt alternate">
 												<section>
 													<label for="class">Mail:</label>
-													<p id="resultado">{{mail}}</p>
+													<p id="resultado" class="info">{{mail}}</p>
 												</section>
 											</div>
-											<div class="col-xxs-12 col-xs-6 mt">
+											<div class="col-xxs-12 col-xs-4 mt">
 												<section>
 													<label for="class">Desde:</label>
-													<p id="resultado">{{origen}}</p>
+													<p id="resultado" class="info">{{origen}}</p>
 												</section>
 											</div>
-											<div class="col-xxs-12 col-xs-6 mt alternate">
+											<div class="col-xxs-12 col-xs-4 mt alternate">
 												<section>
 													<label for="class">Hacia:</label>
-													<p id="resultado">{{destino}}</p>
+													<p id="resultado" class="info">{{destino}}</p>
 												</section>
 											</div>
-											<div class="col-xxs-12 col-xs-6 mt">
+											<div class="col-xxs-12 col-xs-4 mt">
 												<div class="input-field">
 													<label for="class">Número de vuelo:</label>
-													<p id="resultado">{{nro_vuelo}}</p>
+													<p id="resultado" class="info">{{nro_vuelo}}</p>
 												</div>
 											</div>
-											<div class="col-xxs-12 col-xs-6 mt alternate">
+											<div class="col-xxs-12 col-xs-4 mt alternate">
 												<section>
 													<label for="class">Duración:</label>
-													<p id="resultado">{{duracion}}</p>
+													<p id="resultado" class="info">{{duracion}}</p>
 												</section>
 											</div>
-											<div class="col-xxs-12 col-xs-6 mt">
+											<div class="col-xxs-12 col-xs-4 mt">
 												<div class="input-field">
 													<label for="date-start">Fecha del vuelo:</label>
-													<p id="resultado">{{fecha}}</p>
+													<p id="resultado" class="info">{{fecha}}</p>
 												</div>
 											</div>
-											<div class="col-xxs-12 col-xs-6 mt">
+											<div class="col-xxs-12 col-xs-4 mt">
 												<div class="input-field">
 													<label for="date-start">Precio del pasaje:</label>
-													<p id="resultado">{{precio}}</p>
+													<p id="resultado" class="info">{{precio}}</p>
 												</div>
 											</div>
-											<div class="col-xxs-12 col-xs-6 mt">
+											<div class="col-xxs-12 col-xs-4 mt">
 												<div class="input-field">
 													<label for="date-start">Hora de partida:</label>
-													<p id="resultado">{{hora_salida}}</p>
+													<p id="resultado" class="info">{{hora_salida}}</p>
 												</div>
 											</div>
-											<div class="col-xxs-12 col-xs-6 mt">
+											<div class="col-xxs-12 col-xs-4 mt">
 												<section>
 													<label for="class">Horar de arribo:</label>
-													<p id="resultado">{{hora_llegada}}</p>
+													<p id="resultado" class="info">{{hora_llegada}}</p>
 												</section>
 											</div>
+											<a href="{{ url_for('home', _external=True)}}"><button class="btn btn-primary btn-block">Volver al home</button></a>
 										</div>
 									</div>
 								</div>
