@@ -192,6 +192,58 @@ def buscar_reserva():
         return render_template('mi-reserva.html', dni=dni, nro_transaccion=nro_transaccion)
     return render_template('buscar-reserva.html')
 
+@app.route('/mi-reserva', methods = ["GET"])
+def mi_reserva():
+    dni = request.args.get('dni')
+    nro_transaccion = request.args.get('nro_transaccion')
+
+    if not dni or not nro_transaccion:
+        current_app.logger.error('Missing parameters: dni, or nro_transaccion')
+        return render_template('no-resultados-reserva.html')
+
+    try:
+        response = requests.get('http://localhost:8080/transacciones')
+        response.raise_for_status()
+        reserva_data = response.json()
+    except requests.exceptions.RequestException as e:
+        current_app.logger.error(f'Error fetching vuelos: {e}')
+        return str(e), 500
+
+    try:
+        reserva = [
+            dato for dato in reserva_data
+            if dato['dni'] == dni and
+               dato['num_transaccion'] == nro_transaccion
+        ]
+
+        if not reserva:
+            current_app.logger.info('No reserva found matching the criteria')
+            return render_template('no-resultados-reserva.html')
+
+        dato = reserva[0]
+        origen = dato['codigo_aeropuerto_origen'] #tabla vuelos
+        destino = dato['codigo_aeropuerto_destino'] #tabla vuelos
+        nro_vuelo = dato['id_vuelo'] #tabla vuelos
+        fecha_salida = dato['fecha_salida'] #tabla vuelos
+        fecha_llegada = dato['fecha_llegada'] #tabla vuelos
+        hora_salida = dato['hora_salida'] #tabla vuelos
+        hora_llegada = dato['hora_llegada'] #tabla vuelos
+        precio = dato['precio'] #tabla vuelos
+        nombre = dato['nombre'] #tabla usuarios
+        apellido = dato['apellido'] #tabla usuarios
+        dni = dato['dni'] #tabla transacciones
+        mail = dato['mail'] #tabla usuarios
+
+        return render_template(
+            'mi-reserva.html', 
+            origen=origen, destino=destino, nro_vuelo=nro_vuelo, 
+            fecha_salida=fecha_salida, fecha_llegada=fecha_llegada, hora_salida=hora_salida, hora_llegada=hora_llegada, 
+            precio=precio, nombre=nombre, apellido=apellido, dni=dni, mail=mail
+        )
+    except Exception as e:
+        current_app.logger.error(f'Unexpected error: {e}')
+        return str(e), 500
+
 
 @app.errorhandler(404)
 def page_not_found(e):
