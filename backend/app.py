@@ -195,6 +195,7 @@ def vuelos():
             'fecha_llegada': row.fecha_llegada.strftime('%Y-%m-%d'),
             'hora_salida': str(row.hora_salida),
             'hora_llegada': str(row.hora_llegada),
+            'duracion': str(row.duracion),
             'precio': row.precio,
             'pasajes_disponibles': row.pasajes_disponibles
         }

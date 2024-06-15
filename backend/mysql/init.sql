@@ -15,6 +15,7 @@ fecha_salida DATE,
 fecha_llegada DATE,
 hora_salida TIME,
 hora_llegada TIME,
+duracion TIME,
 precio DECIMAL(10, 2),
 pasajes_disponibles INT,
 FOREIGN KEY (codigo_aeropuerto_origen) REFERENCES aeropuertos (codigo_aeropuerto),
@@ -41,37 +42,32 @@ CREATE TABLE IF NOT EXISTS transacciones (
 
 INSERT INTO usuarios VALUES (40123456, 'Juan', 'Perez', 'juanperez@gmail.com');
 
-INSERT INTO aeropuertos VALUES ('BUE', 'Aeropuerto de Buenos Aires ', 'Buenos Aires', 'Argentina');
-INSERT INTO aeropuertos VALUES ('BCR', 'Aeropuerto de Bariloche', 'Bariloche', 'Argentina');
-INSERT INTO aeropuertos VALUES ('COR', 'Aeropuerto de Cordoba', 'Cordoba', 'Argentina');
-INSERT INTO aeropuertos VALUES ('MDZ', 'Aeropuerto de Mendoza', 'Mendoza', 'Argentina');
-INSERT INTO aeropuertos VALUES ('NQN', 'Aeropuerto de Neuquen', 'Neuquen', 'Argentina');
-INSERT INTO aeropuertos VALUES ('USH', 'Aeropuerto de Ushuaia', 'Ushuaia', 'Argentina');
-INSERT INTO aeropuertos VALUES ('SLA', 'Aeropuerto de Salta', 'Salta', 'Argentina');
+INSERT INTO aeropuertos (codigo_aeropuerto, nombre_aeropuerto, ciudad, pais) VALUES 
+('BUE', 'Aeropuerto de Buenos Aires', 'Buenos Aires', 'Argentina'),
+('BCR', 'Aeropuerto de Bariloche', 'Bariloche', 'Argentina'),
+('COR', 'Aeropuerto de Cordoba', 'Cordoba', 'Argentina'),
+('MDZ', 'Aeropuerto de Mendoza', 'Mendoza', 'Argentina'),
+('NQN', 'Aeropuerto de Neuquen', 'Neuquen', 'Argentina'),
+('USH', 'Aeropuerto de Ushuaia', 'Ushuaia', 'Argentina'),
+('SLA', 'Aeropuerto de Salta', 'Salta', 'Argentina');
 
-INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, fecha_salida, fecha_llegada, hora_salida, hora_llegada, precio, pasajes_disponibles)
-VALUES ('BUE','BCR','2024-07-20','2024-07-20','14:30:00','16:30:00',300000.00,150);
-
-INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, fecha_salida, fecha_llegada, hora_salida, hora_llegada, precio, pasajes_disponibles)
-VALUES ('BUE','COR','2024-07-20','2024-07-20','14:30:00','16:30:00',250000.00,150);
-
-INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, fecha_salida, fecha_llegada, hora_salida, hora_llegada, precio, pasajes_disponibles)
-VALUES ('BUE','MDZ','2024-07-20','2024-07-20','14:00:00','16:30:00',350000.00,150);
-
-INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, fecha_salida, fecha_llegada, hora_salida, hora_llegada, precio, pasajes_disponibles)
-VALUES ('BUE','USH','2024-07-20','2024-07-20','13:30:00','16:30:00',400000.00,150);
-
-INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, fecha_salida, fecha_llegada, hora_salida, hora_llegada, precio, pasajes_disponibles)
-VALUES ('COR','BUE','2024-07-20','2024-07-20','14:30:00','16:30:00',300000.00,150);
-
-INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, fecha_salida, fecha_llegada, hora_salida, hora_llegada, precio, pasajes_disponibles)
-VALUES ('BUE','SLA','2024-07-20','2024-07-20','14:30:00','16:30:00',150000.00,150);
-
-INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, fecha_salida, fecha_llegada, hora_salida, hora_llegada, precio, pasajes_disponibles)
-VALUES ('MDZ','BUE','2024-07-20','2024-07-20','14:30:00','16:30:00',300000.00,150);
-
-INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, fecha_salida, fecha_llegada, hora_salida, hora_llegada, precio, pasajes_disponibles)
-VALUES ('USH','BUE','2024-07-20','2024-07-20','14:30:00','16:30:00',300000.00,150);
-
-INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, fecha_salida, fecha_llegada, hora_salida, hora_llegada, precio, pasajes_disponibles)
-VALUES ('BUE','NQN','2024-07-20','2024-07-20','14:30:00','16:30:00',300000.00,150);
+INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, fecha_salida, fecha_llegada, hora_salida, hora_llegada, duracion, precio, pasajes_disponibles)
+VALUES 
+('BUE', 'BCR', '2024-07-20', '2024-07-20', '14:30:00', '16:30:00', '02:00:00', 300000.00, 150),
+('BUE', 'COR', '2024-07-20', '2024-07-20', '14:30:00', '16:30:00', '02:00:00', 250000.00, 150),
+('BUE', 'MDZ', '2024-07-20', '2024-07-20', '14:00:00', '16:30:00', '02:30:00', 350000.00, 150),
+('BUE', 'USH', '2024-07-20', '2024-07-20', '13:30:00', '16:30:00', '03:00:00', 400000.00, 150),
+('COR', 'BUE', '2024-07-20', '2024-07-20', '14:30:00', '16:30:00', '02:00:00', 300000.00, 150),
+('BUE', 'SLA', '2024-07-20', '2024-07-20', '14:30:00', '16:30:00', '02:00:00', 150000.00, 150),
+('MDZ', 'BUE', '2024-07-20', '2024-07-20', '14:30:00', '16:30:00', '02:00:00', 300000.00, 150),
+('USH', 'BUE', '2024-07-20', '2024-07-20', '14:30:00', '16:30:00', '02:00:00', 300000.00, 150),
+('BUE', 'NQN', '2024-07-20', '2024-07-20', '14:30:00', '16:30:00', '02:00:00', 300000.00, 150),
+('BCR', 'BUE', '2024-07-21', '2024-07-21', '14:30:00', '16:30:00', '02:00:00', 300000.00, 150),
+('COR', 'MDZ', '2024-07-21', '2024-07-21', '14:30:00', '16:30:00', '02:00:00', 250000.00, 150),
+('MDZ', 'COR', '2024-07-21', '2024-07-21', '14:30:00', '16:30:00', '02:00:00', 350000.00, 150),
+('USH', 'COR', '2024-07-21', '2024-07-21', '14:30:00', '16:30:00', '02:00:00', 400000.00, 150),
+('COR', 'SLA', '2024-07-21', '2024-07-21', '14:30:00', '16:30:00', '02:00:00', 300000.00, 150),
+('SLA', 'BUE', '2024-07-21', '2024-07-21', '14:30:00', '16:30:00', '02:00:00', 150000.00, 150),
+('NQN', 'BUE', '2024-07-21', '2024-07-21', '14:30:00', '16:30:00', '02:00:00', 300000.00, 150),
+('USH', 'MDZ', '2024-07-21', '2024-07-21', '14:30:00', '16:30:00', '02:00:00', 300000.00, 150),
+('SLA', 'MDZ', '2024-07-21', '2024-07-21', '14:30:00', '16:30:00', '02:00:00', 300000.00, 150);
