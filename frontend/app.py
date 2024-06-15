@@ -199,7 +199,7 @@ def mi_reserva():
 
     if not dni or not nro_transaccion:
         current_app.logger.error('Missing parameters: dni, or nro_transaccion')
-        return render_template('no-resultados-reserva.html')
+        return render_template('no-reserva.html')
 
     try:
         response = requests.get('http://localhost:8080/transacciones')

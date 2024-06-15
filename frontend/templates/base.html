@@ -67,9 +67,11 @@
                         <a href="{{ url_for('home') }}" class="js-fh5co-nav-toggle fh5co-nav-toggle dark"><i></i></a>
                         <h1 id="fh5co-logo"><a href="{{ url_for('home') }}"><i class="icon-airplane"></i>FIUBA AIRLINES</a></h1>
                         <!-- START #fh5co-menu-wrap -->
+						{% block nav %} {% endblock %}
                         
                     </div>
                 </div>
+				
             </header>
         {% block body %} {% endblock %}
     </body>
