@@ -66,7 +66,7 @@ def info_usuario():
             "mail": mail
         }
 
-        api_response = requests.post("http://localhost:8080/crear-usuario", json=datos_usuarios)
+        api_response = requests.post("http://localhost:8080/usuarios", json=datos_usuarios)
 
         if api_response.status_code == 201:
             return redirect(url_for("pago", nombre=nombre, apellido=apellido, dni=dni, mail=mail))

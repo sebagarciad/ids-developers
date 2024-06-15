@@ -33,7 +33,7 @@ def aeropuertos():
         return jsonify({'message': f'Ocurrio un error: {str(err.__cause__)}'}), 500
     
 # sumar-aeropuertos esta listo.    
-@app.route('/sumar-aeropuerto', methods=['POST'])
+@app.route('/aeropuertos', methods=['POST'])
 def sumar_aeropuerto():
     conn = engine.connect()
     new_aeropuerto = request.get_json()
@@ -55,7 +55,7 @@ def sumar_aeropuerto():
         conn.close()
         return jsonify({'message': f'Se ha producido un error: {str(err.__cause__)}'}), 500
 
-@app.route('/modificar-aeropuerto/<codigo_aeropuerto>', methods = ['PATCH'])
+@app.route('/aeropuertos/<codigo_aeropuerto>', methods = ['PATCH'])
 def modificar_aeropuerto(codigo_aeropuerto):
     conn = engine.connect()
     mod_user = request.get_json()
@@ -76,7 +76,7 @@ def modificar_aeropuerto(codigo_aeropuerto):
         return jsonify({'message': str(err.__cause__)})
     return jsonify({'message': 'se ha modificado correctamente' + query}), 200
 
-@app.route('/eliminar-aeropuerto/<codigo_aeropuerto>', methods = ['DELETE'])
+@app.route('/aeropuertos/<codigo_aeropuerto>', methods = ['DELETE'])
 def delete_aeropuerto(codigo_aeropuerto):
     conn = engine.connect()
     query = f"DELETE FROM aeropuertos WHERE codigo_aeropuerto = {codigo_aeropuerto};"
@@ -94,7 +94,7 @@ def delete_aeropuerto(codigo_aeropuerto):
         jsonify(str(err.__cause__))
     return jsonify({'message': 'Se ha eliminado correctamente'}), 202
 
-@app.route('/users/<dni>', methods = ['GET'])
+@app.route('/usuarios/<dni>', methods = ['GET'])
 def get_usuario(dni):
     conn = engine.connect()
     query = f"SELECT * FROM usuarios where dni = {dni};"
@@ -114,7 +114,7 @@ def get_usuario(dni):
         return jsonify(data), 200
     return jsonify({"message": "El usuario no existe"}), 404
 
-@app.route('/crear-usuario', methods = ['POST'])
+@app.route('/usuarios', methods = ['POST'])
 def crear_usuario():
     conn = engine.connect()
     new_user = request.get_json()
@@ -135,7 +135,7 @@ def crear_usuario():
     except SQLAlchemyError as err:
         return jsonify({'message': 'Se ha producido un error' + str(err.__cause__)})
     
-@app.route('/users/<dni>', methods = ['PATCH'])
+@app.route('/usuarios/<dni>', methods = ['PATCH'])
 def actualizar_usuario(dni):
     conn = engine.connect()
     mod_user = request.get_json()
@@ -156,7 +156,7 @@ def actualizar_usuario(dni):
         return jsonify({'message': str(err.__cause__)})
     return jsonify({'message': 'El usuario se ha modificado correctamente' + query}), 200    
 
-@app.route('/eliminar-usuario/<dni>', methods = ['DELETE'])
+@app.route('/usuarios/<dni>', methods = ['DELETE'])
 def delete_usuario(dni):
     conn = engine.connect()
     query = f"DELETE FROM usuarios WHERE dni = {dni};"
@@ -202,7 +202,7 @@ def vuelos():
 
     return jsonify(data), 200
 
-@app.route('/agregar-vuelo', methods = ['POST'])
+@app.route('/vuelos', methods = ['POST'])
 def agregar_vuelo():
     conn = engine.connect()
     nuevo_vuelo = request.get_json()
@@ -255,17 +255,16 @@ def transacciones():
         conn.close()
         return jsonify({'message': f'Ocurrio un error: {str(err.__cause__)}'}), 500
 
-@app.route('/crear_transaccion', methods = ['POST'])
+@app.route('/transacciones', methods = ['POST'])
 def crear_transaccion():
     conn = engine.connect()
     new_transaccion = request.get_json()
     query = text("""
-        INSERT INTO transacciones (num_transaccion, id_vuelo, total_transaccion, dni)
-        VALUES (:num_transaccion, :id_vuelo, :total_transaccion, :dni)
+        INSERT INTO transacciones (id_vuelo, total_transaccion, dni)
+        VALUES (:id_vuelo, :total_transaccion, :dni)
     """)
     try:
         result = conn.execute(query, {
-            'num_transaccion': new_transaccion['num_transaccion'],
             'id_vuelo': new_transaccion['id_vuelo'],
             'total_transaccion': new_transaccion['total_transaccion'],
             'dni': new_transaccion['dni']
@@ -332,7 +331,7 @@ def delete_transaccion(num_transaccion):
         return jsonify(str(err.__cause__)), 500
     return jsonify({'message': 'Se ha eliminado correctamente'}), 202
 
-@app.route('/actualizar-vuelos/<id_vuelo>', methods = ['PATCH'])
+@app.route('/vuelos/<id_vuelo>', methods = ['PATCH'])
 def actualizar_vuelo(id_vuelo):
     conn = engine.connect()
     act_vuelo = request.get_json()
