@@ -532,7 +532,7 @@ figure {
 }
 
 .tabulation {
-  width: 75%;
+  width: 100%;
   float: left;
   margin-top: -12em;
   background: rgba(255, 255, 255, 0.95);
@@ -638,7 +638,7 @@ figure {
 }
 
 .mt {
-  margin-bottom: 5px;
+  margin-bottom: 20px;
 }
 
 div.cs-select span {

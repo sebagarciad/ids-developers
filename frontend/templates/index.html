@@ -8,7 +8,15 @@
 {% endblock %}
 {% block title %}Fiuba Airlines{% endblock %}
 {% block body %} 
-		
+		<style>
+			.checkin{
+				margin-bottom: 50px;
+			}
+			.entrada{
+				margin-top: 3%;
+			}
+			
+		</style>
 
 		<!-- end:header-top -->
 	
@@ -18,8 +26,8 @@
 				<div class="desc">
 					<div class="container">
 						<div class="row">
-							<div class="col-sm-5 col-md-5">
-								<div class="tabulation animate-box">
+							<div class="col-sm-6 col-md-6 ">
+								<div class="tabulation animate-box entrada">
 
 								  <!-- Nav tabs -->
 								   <ul class="nav nav-tabs" role="tablist">
@@ -46,7 +54,7 @@
 														<div class="alert alert-danger">{{ error_vacio.get("desde") }}</div>
 													{% endif %}
 												</div>
-												<div class="col-xxs-12 col-xs-6 mt">
+												<div class="col-xxs-12 col-xs-6 mt checkin">
 													<section>
 														<label for="class">Hasta:</label>
 														<select class="cs-select cs-skin-border" name="hasta">
@@ -63,7 +71,7 @@
 														<div class="alert alert-danger">{{ error_vacio.get("hasta") }}</div>
 													{% endif %}
 												</div>
-												<div class="col-xxs-12 col-xs-6 mt alternate">
+												<div class="col-xxs-12 col-xs-6 mt alternate checkin">
 													<div class="input-field">
 														<label for="date-start">Check In:</label>
 														<input type="text" class="form-control" id="date-start" placeholder="mm/dd/yyyy" name="fecha"/>
@@ -82,7 +90,7 @@
 								</div>
 							</div>
 							<div class="desc2 animate-box">
-								<div class="col-sm-7 col-sm-push-1 col-md-7 col-md-push-1">
+								<div class="col-sm-6 col-sm-push-1 col-md-6 col-md-push-1">
 									<p>HandCrafted by <a href="http://frehtml5.co/" target="_blank" class="fh5co-site-name">FreeHTML5.co</a></p>
 									<h2>Exclusive Limited Time Offer</h2>
 									<h3>Fly to Hong Kong via Los Angeles, USA</h3>
