@@ -347,7 +347,7 @@ def transacciones():
         data = [
             {
                 'num_transaccion': row[0],
-                'in_vuelo': row[1],
+                'id_vuelo': row[1],
                 'total_transaccion': row[2],
                 'dni': row[3]
             } for row in result

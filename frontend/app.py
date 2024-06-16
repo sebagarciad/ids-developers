@@ -177,7 +177,8 @@ def pago():
         if not dni_titular_tarjeta or not 7 <= len(dni_titular_tarjeta) <= 8:
             errores_validacion["dni_titular"] = "Ingresar un DNI valido."
         if errores_validacion:
-            return render_template('pago.html', errores_validacion=errores_validacion, nombre_titular=nombre_titular, numero_tarjeta=numero_tarjeta, vencimiento=vencimiento, codigo_seguridad=codigo_seguridad)
+            return render_template('pago.html', errores_validacion=errores_validacion, nombre_titular=nombre_titular, 
+                                   numero_tarjeta=numero_tarjeta, vencimiento=vencimiento, codigo_seguridad=codigo_seguridad)
         
         nombre = session.get('nombre')
         apellido = session.get('apellido')
@@ -189,6 +190,20 @@ def pago():
         hora_llegada = session.get('hora_llegada')
         duracion = session.get('duracion')
         precio = session.get('precio')
+
+        datos_transaccion = {
+            "id_vuelo": nro_vuelo,
+            "dni": dni,
+            "total_transaccion": precio
+        }
+
+        # Send user data to API
+        try:
+            api_response = requests.post("http://localhost:8080/transacciones", json=datos_transaccion)
+            api_response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            current_app.logger.error(f'Error al enviar datos de usuario al API: {e}')
+            return str(e), 500
 
         return redirect(url_for("compra_confirmada", nombre=nombre, apellido=apellido, dni=dni, 
                                 nro_vuelo=nro_vuelo, fecha_salida=fecha_salida, 
@@ -202,19 +217,22 @@ def pago():
 
 @app.route("/compra-confirmada", methods=["GET"])
 def compra_confirmada():
-    origen = 'Buenos Aires'
-    destino = 'Córdoba'
-    nro_vuelo = 'AR1549'
-    duracion = '1 hora 15 minutos'
-    hora_salida = '15:00 hs'
-    hora_llegada = '16:15 hs'
-    precio = '$45000'
-    fecha = '4/6/2024'
-    nombre = 'Juan'
-    apellido = 'Perez'
-    dni = '12345678'
-    mail = 'example@gmail.com'
-    return render_template('compra-confirmada.html', origen=origen, destino=destino, nro_vuelo=nro_vuelo, duracion=duracion, hora_salida=hora_salida, hora_llegada=hora_llegada, precio=precio, fecha=fecha, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
+    nombre = session.get('nombre')
+    apellido = session.get('apellido')
+    dni = session.get('dni')
+    nro_vuelo = session.get('nro_vuelo')
+    fecha_salida = session.get('fecha_salida')
+    hora_salida = session.get('hora_salida')
+    fecha_llegada = session.get('fecha_llegada')
+    hora_llegada = session.get('hora_llegada')
+    duracion = session.get('duracion')
+    precio = session.get('precio')
+    origen = session.get('origen')
+    destino = session.get('destino')
+    return render_template('compra-confirmada.html', nombre=nombre, apellido=apellido, dni=dni, 
+                                nro_vuelo=nro_vuelo, fecha_salida=fecha_salida, 
+                                hora_salida=hora_salida, fecha_llegada=fecha_llegada, 
+                                hora_llegada=hora_llegada, duracion=duracion, precio=precio, origen=origen, destino=destino)
 
 
 @app.route('/buscar-reserva', methods = ["GET", "POST"])
