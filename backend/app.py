@@ -338,18 +338,40 @@ def delete_vuelo(id_vuelo):
 #   TABLA TRANSACCIONES
 #
 #
-@app.route('/transacciones', methods = ['GET'])
+@app.route('/transacciones', methods=['GET'])
 def transacciones():
     try:
         conn = engine.connect()
-        query = "SELECT * FROM transacciones;"
+        query = """
+        SELECT 
+            t.num_transaccion, t.id_vuelo, t.total_transaccion, t.dni, v.codigo_aeropuerto_origen, v.codigo_aeropuerto_destino, v.fecha_salida,
+            v.fecha_llegada, v.hora_salida, v.hora_llegada, v.duracion, v.precio, v.pasajes_disponibles, u.nombre, u.apellido, u.mail
+        FROM 
+            transacciones t
+        JOIN 
+            vuelos v ON t.id_vuelo = v.id_vuelo
+        JOIN 
+            usuarios u ON t.dni = u.dni;
+        """
         result = conn.execute(text(query))
         data = [
             {
                 'num_transaccion': row[0],
                 'id_vuelo': row[1],
                 'total_transaccion': row[2],
-                'dni': row[3]
+                'dni': row[3],
+                'codigo_aeropuerto_origen': row[4],
+                'codigo_aeropuerto_destino': row[5],
+                'fecha_salida': str(row[6]),
+                'fecha_llegada': str(row[7]),
+                'hora_salida': str(row[8]),
+                'hora_llegada': str(row[9]),
+                'duracion': str(row[10]),
+                'precio': row[11],
+                'pasajes_disponibles': row[12],
+                'nombre': row[13],
+                'apellido': row[14],
+                'mail': row[15]
             } for row in result
         ]
         conn.close()
@@ -357,6 +379,7 @@ def transacciones():
     except SQLAlchemyError as err:
         conn.close()
         return jsonify({'message': f'Ocurrio un error: {str(err.__cause__)}'}), 500
+
 
 @app.route('/transacciones', methods = ['POST'])
 def crear_transaccion():
