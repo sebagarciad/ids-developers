@@ -103,82 +103,78 @@
                               </li>
                          
                            </ul>
-                            <div class="tab-content-detalles">
-                                 <div role="tabpanel" class="tab-pane active" id="flights">
-                                    <div class="row">
-                                        <div class="col-xxs-6 col-xs-6 mt alternate">
-                                            <section>
-                                                <div class="col-xxs-12 col-xs-12 mt">
-                                                    <div class="input-field text-center">
-                                                        <label for="date-start">Nombre y apellido</label>
-                                                        <p id="resultado">Juan Perez</p>
-                                                    </div>
+                           <div class="tab-content-detalles">
+                            <div role="tabpanel" class="tab-pane active" id="flights">
+                                <div class="row">
+                                    <div class="col-xxs-6 col-xs-6 mt alternate">
+                                        <section>
+                                            <div class="col-xxs-12 col-xs-12 mt">
+                                                <div class="input-field text-center">
+                                                    <label for="date-start">Pasajero</label>
+                                                    <p id="resultado">{{ session.get('nombre') }} {{ session.get('apellido') }}</p>
                                                 </div>
-                                            </section>
-                                        </div>
-                                        <div class="col-xxs-6 col-xs-6 mt alternate">
-                                            <section>
-                                                <div class="col-xxs-12 col-xs-12 mt">
-                                                    <div class="input-field text-center">
-                                                        <label for="date-start">DNI</label>
-                                                        <p id="resultado">12345678</p>
-                                                    </div>
-                                                </div>
-                                            </section>
-                                        </div>
-                                        <div class="col-xxs-6 col-xs-6 mt alternate">
-                                            <section>
-                                                <div class="col-xxs-12 col-xs-12 mt">
-                                                    <div class="input-field text-center">
-                                                        <label for="date-start">Fecha de salida</label>
-                                                        <p id="resultado">20/07/2024</p>
-                                                    </div>
-                                                </div>
-                                            </section>
-                                        </div>
-                                        <div class="col-xxs-6 col-xs-6 mt alternate">
-                                            <section>
-                                                <div class="col-xxs-12 col-xs-12 mt">
-                                                    <div class="input-field text-center">
-                                                        <label for="date-start">Fecha de llegada</label>
-                                                        <p id="resultado">20/07/2024</p>
-                                                    </div>
-                                                </div>
-                                            </section>
-                                        </div>
-                                        <div class="col-xxs-6 col-xs-6 mt alternate lugares">
-                                            <section>
-                                                <div class="col-xxs-12 col-xs-12 mt precio">
-                                                    <div class="input-field text-center">
-                                                        <label for="date-start">Origen</label>
-                                                        <p id="resultado">Buenos Aires</p>
-                                                    </div>
-                                                </div>
-                                            </section>
-                                        </div>
-                                        <div class="col-xxs-6 col-xs-6 mt alternate lugares">
-                                            <section>
-                                                <div class="col-xxs-12 col-xs-12 mt precio">
-                                                    <div class="input-field text-center">
-                                                        <label for="date-start">Destino</label>
-                                                        <p id="resultado">Cordoba</p>
-                                                    </div>
-                                                </div>
-                                            </section>
-                                        </div>
-
-                                        <div class="col-xxs-12 col-xs-12 mt precio">
-                                            <div class="input-field text-center">
-                                                <label for="date-start">Precio del pasaje:</label>
-                                                <p id="resultado">$50000</p>
                                             </div>
-                                        </div>
-                                        
-                                        
+                                        </section>
                                     </div>
-                                    
-                                 </div>
+                                    <div class="col-xxs-6 col-xs-6 mt alternate">
+                                        <section>
+                                            <div class="col-xxs-12 col-xs-12 mt">
+                                                <div class="input-field text-center">
+                                                    <label for="date-start">DNI</label>
+                                                    <p id="resultado">{{ session.get('dni') }}</p>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <div class="col-xxs-6 col-xs-6 mt alternate">
+                                        <section>
+                                            <div class="col-xxs-12 col-xs-12 mt">
+                                                <div class="input-field text-center">
+                                                    <label for="date-start">Fecha de salida</label>
+                                                    <p id="resultado">{{ session.get('fecha_salida') }} {{ session.get('hora_salida') }}</p>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <div class="col-xxs-6 col-xs-6 mt alternate">
+                                        <section>
+                                            <div class="col-xxs-12 col-xs-12 mt">
+                                                <div class="input-field text-center">
+                                                    <label for="date-start">Fecha de llegada</label>
+                                                    <p id="resultado">{{ session.get('fecha_llegada') }} {{ session.get('hora_llegada') }}</p>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <div class="col-xxs-6 col-xs-6 mt alternate lugares">
+                                        <section>
+                                            <div class="col-xxs-12 col-xs-12 mt precio">
+                                                <div class="input-field text-center">
+                                                    <label for="date-start">Origen</label>
+                                                    <p id="resultado">{{ session.get('origen') }}</p>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <div class="col-xxs-6 col-xs-6 mt alternate lugares">
+                                        <section>
+                                            <div class="col-xxs-12 col-xs-12 mt precio">
+                                                <div class="input-field text-center">
+                                                    <label for="date-start">Destino</label>
+                                                    <p id="resultado">{{ session.get('destino') }}</p>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <div class="col-xxs-12 col-xs-12 mt precio">
+                                        <div class="input-field text-center">
+                                            <label for="date-start">Precio del pasaje:</label>
+                                            <p id="resultado">{{ session.get('precio') }}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>   

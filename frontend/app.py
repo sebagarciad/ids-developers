@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, current_app
+from flask import Flask, render_template, request, redirect, url_for, current_app, session
 from datetime import datetime
 import re
 import requests
+import secrets
 
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(16)
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -76,12 +78,24 @@ def resultados_busqueda():
         duracion = vuelo['duracion']
         precio = vuelo['precio']
 
+        session['origen'] = origen
+        session['destino'] = destino
+        session['nro_vuelo'] = nro_vuelo
+        session['fecha_salida'] = fecha_salida
+        session['hora_salida'] = hora_salida
+        session['fecha_llegada'] = fecha_llegada
+        session['hora_llegada'] = hora_llegada
+        session['duracion'] = duracion
+        session['precio'] = precio
+
         return render_template(
-            'resultados-de-busqueda.html', 
-            origen=origen, destino=destino, nro_vuelo=nro_vuelo, 
-            fecha_salida=fecha_salida, fecha_llegada=fecha_llegada, hora_salida=hora_salida, hora_llegada=hora_llegada, 
-            duracion=duracion, precio=precio, fecha=fecha
-        )
+        'resultados-de-busqueda.html', 
+        origen=origen, destino=destino, nro_vuelo=session['nro_vuelo'], 
+        fecha_salida=session['fecha_salida'], fecha_llegada=session['fecha_llegada'], 
+        hora_salida=session['hora_salida'], hora_llegada=session['hora_llegada'], 
+        duracion=session['duracion'], precio=session['precio'], fecha=fecha
+    )
+
     except KeyError as e:
         current_app.logger.error(f'Key error: {e}')
         return str(e), 500
@@ -110,6 +124,13 @@ def info_usuario():
         if errores_validacion:
             return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
         
+        # Store user data in session
+        session['nombre'] = nombre
+        session['apellido'] = apellido
+        session['dni'] = dni
+        session['mail'] = mail
+
+        # Create user data payload to send to API
         datos_usuarios = {
             "dni": dni,
             "nombre": nombre,
@@ -117,14 +138,22 @@ def info_usuario():
             "mail": mail
         }
 
-        api_response = requests.post("http://localhost:8080/usuarios", json=datos_usuarios)
+        # Send user data to API
+        try:
+            api_response = requests.post("http://localhost:8080/usuarios", json=datos_usuarios)
+            api_response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            current_app.logger.error(f'Error al enviar datos de usuario al API: {e}')
+            return str(e), 500
 
+        # If user data was successfully sent, proceed to pago
         if api_response.status_code == 201:
-            return redirect(url_for("pago", nombre=nombre, apellido=apellido, dni=dni, mail=mail))
+            return redirect(url_for("pago"))
         else:
             return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
     
     return render_template('informacion-usuario.html')
+
 
 
 @app.route('/pago', methods=["GET", "POST"])
@@ -150,7 +179,22 @@ def pago():
         if errores_validacion:
             return render_template('pago.html', errores_validacion=errores_validacion, nombre_titular=nombre_titular, numero_tarjeta=numero_tarjeta, vencimiento=vencimiento, codigo_seguridad=codigo_seguridad)
         
-        return redirect(url_for("compra_confirmada", nombre_titular=nombre_titular, numero_tarjeta=numero_tarjeta, vencimiento=vencimiento, codigo_seguridad=codigo_seguridad, dni_titular_tarjeta=dni_titular_tarjeta))
+        nombre = session.get('nombre')
+        apellido = session.get('apellido')
+        dni = session.get('dni')
+        nro_vuelo = session.get('nro_vuelo')
+        fecha_salida = session.get('fecha_salida')
+        hora_salida = session.get('hora_salida')
+        fecha_llegada = session.get('fecha_llegada')
+        hora_llegada = session.get('hora_llegada')
+        duracion = session.get('duracion')
+        precio = session.get('precio')
+
+        return redirect(url_for("compra_confirmada", nombre=nombre, apellido=apellido, dni=dni, 
+                                nro_vuelo=nro_vuelo, fecha_salida=fecha_salida, 
+                                hora_salida=hora_salida, fecha_llegada=fecha_llegada, 
+                                hora_llegada=hora_llegada, duracion=duracion, precio=precio))
+
 
 
     return render_template('pago.html')
