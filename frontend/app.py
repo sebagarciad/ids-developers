@@ -127,22 +127,6 @@ def info_usuario():
     return render_template('informacion-usuario.html')
 
 
-@app.route("/compra-confirmada", methods=["GET"])
-def compra_confirmada():
-    origen = 'Buenos Aires'
-    destino = 'Córdoba'
-    nro_vuelo = 'AR1549'
-    duracion = '1 hora 15 minutos'
-    hora_salida = '15:00 hs'
-    hora_llegada = '16:15 hs'
-    precio = '$45000'
-    fecha = '4/6/2024'
-    nombre = 'Juan'
-    apellido = 'Perez'
-    dni = '12345678'
-    mail = 'example@gmail.com'
-    return render_template('compra-confirmada.html', origen=origen, destino=destino, nro_vuelo=nro_vuelo, duracion=duracion, hora_salida=hora_salida, hora_llegada=hora_llegada, precio=precio, fecha=fecha, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
-
 @app.route('/pago', methods=["GET", "POST"])
 def pago():
     if request.method == "POST":
@@ -170,6 +154,24 @@ def pago():
 
 
     return render_template('pago.html')
+
+
+@app.route("/compra-confirmada", methods=["GET"])
+def compra_confirmada():
+    origen = 'Buenos Aires'
+    destino = 'Córdoba'
+    nro_vuelo = 'AR1549'
+    duracion = '1 hora 15 minutos'
+    hora_salida = '15:00 hs'
+    hora_llegada = '16:15 hs'
+    precio = '$45000'
+    fecha = '4/6/2024'
+    nombre = 'Juan'
+    apellido = 'Perez'
+    dni = '12345678'
+    mail = 'example@gmail.com'
+    return render_template('compra-confirmada.html', origen=origen, destino=destino, nro_vuelo=nro_vuelo, duracion=duracion, hora_salida=hora_salida, hora_llegada=hora_llegada, precio=precio, fecha=fecha, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
+
 
 @app.route('/buscar-reserva', methods = ["GET", "POST"])
 def buscar_reserva():
