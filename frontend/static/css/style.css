@@ -1992,18 +1992,10 @@ div.cs-select span {
 #titulo-descripcion {
   color: white;
   font-size: 30px;
-  align-content: center;
-  text-align: left;
-  margin-right: 1100px;
-  margin-left: 100px;
 }
 
 #descripcion  {
   color: rgba(255, 255, 255, 0.7);
-  align-content: center;
-  text-align: left;
-  margin-right: 1100px;
-  margin-left: 100px;
 }
 
 #titulo-contacto {
@@ -2024,6 +2016,5 @@ div.cs-select span {
 #info-footer {
   display: flex;
   max-width: 100x;
-
 }
 /*# sourceMappingURL=style.css.map */
