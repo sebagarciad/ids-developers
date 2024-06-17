@@ -249,63 +249,90 @@ def buscar_reserva():
         if error_vacio:
             return render_template('buscar-reserva.html', error_vacio=error_vacio, dni=dni, nro_vuelo=nro_vuelo)
         
-        return render_template('mi-reserva.html', dni=dni, nro_vuelo=nro_vuelo)
+        try:
+            response = requests.get('http://localhost:8080/transacciones')
+            response.raise_for_status()
+            reserva_data = response.json()
+        except requests.exceptions.RequestException as e:
+            current_app.logger.error(f'Error fetching transacciones: {e}')
+            return str(e), 500
+
+        try:
+            response2= requests.get('http://localhost:8080/vuelos')
+            response2.raise_for_status()
+            vuelos_data = response2.json()
+        except requests.exceptions.RequestException as e:
+            current_app.logger.error(f'Error fetching vuelos: {e}')
+            return str(e), 500
+        
+        try:
+            response3 = requests.get('http://localhost:8080/usuarios')
+            response3.raise_for_status()
+            usuarios_data = response3.json()
+        except requests.exceptions.RequestException as e:
+            current_app.logger.error(f'Error fetching usuarios: {e}')
+            return str(e), 500
+
+        try:
+            reserva = [
+                dato for dato in reserva_data
+                if dato['dni'] == int(dni) and
+                dato['id_vuelo'] == int(nro_vuelo)
+            ]
+
+            vuelo_filtrado = [
+                vuelo for vuelo in vuelos_data
+                if vuelo['id_vuelo'] == int(nro_vuelo)
+            ]
+
+            usuario_filtrado = [
+                usuario for usuario in usuarios_data
+                if usuario['dni'] == int(dni)
+            ]
+
+            print(reserva)  # Log filtered data for debugging
+
+            if not reserva:
+                current_app.logger.info('No reserva found matching the criteria')
+                return render_template('no-resultados-reserva.html')
+            
+            if not vuelo_filtrado:
+                current_app.logger.info('No vuelo found matching the criteria')
+                return render_template('no-resultados-reserva.html')
+            
+            if not usuario_filtrado:
+                current_app.logger.info('No usuario found matching the criteria')
+                return render_template('no-resultados-reserva.html')
+            
+            dato = reserva[0]
+            vuelo = vuelo_filtrado[0]
+            usuario = usuario_filtrado[0]
+            origen = vuelo['codigo_aeropuerto_origen'] #tabla vuelos
+            destino = vuelo['codigo_aeropuerto_destino'] #tabla vuelos
+            nro_vuelo = dato['id_vuelo'] #tabla transacciones
+            duracion = vuelo['duracion']
+            fecha_salida = vuelo['fecha_salida'] #tabla vuelos
+            fecha_llegada = vuelo['fecha_llegada'] #tabla vuelos
+            hora_salida = vuelo['hora_salida'] #tabla vuelos
+            hora_llegada = vuelo['hora_llegada'] #tabla vuelos
+            precio = vuelo['precio'] #tabla vuelos
+            nombre = usuario['nombre'] #tabla usuarios
+            apellido = usuario['apellido'] #tabla usuarios
+            dni = dato['dni'] #tabla transacciones
+            mail = usuario['mail'] #tabla usuarios
+
+            return render_template('mi-reserva.html', 
+                                origen=origen, destino=destino, nro_vuelo=nro_vuelo, 
+                                fecha_salida=fecha_salida, fecha_llegada=fecha_llegada, hora_salida=hora_salida, hora_llegada=hora_llegada, 
+                                precio=precio, nombre=nombre, apellido=apellido, dni=dni, mail=mail, duracion=duracion)
+        except Exception as e:
+            current_app.logger.error(f'Unexpected error: {e}')
+            return str(e), 500
     return render_template('buscar-reserva.html')
 
-@app.route('/mi-reserva', methods=["GET", "DELETE"])
-def mi_reserva():
-    dni = request.args.get('dni')
-    nro_vuelo = request.args.get('nro_vuelo')
-
-    if not dni or not nro_vuelo:
-        current_app.logger.error('Missing parameters: dni, or nro_vuelo')
-        return render_template('no-reserva.html')
-
-    try:
-        response = requests.get('http://localhost:8080/transacciones')
-        response.raise_for_status()
-        reserva_data = response.json()
-    except requests.exceptions.RequestException as e:
-        current_app.logger.error(f'Error fetching vuelos: {e}')
-        return str(e), 500
-
-    try:
-        reserva = [
-            dato for dato in reserva_data
-            if dato['dni'] == dni and
-               dato['id_vuelo'] == int(nro_vuelo)
-        ]
-
-        print(reserva)  # Log filtered data for debugging
-
-        if not reserva:
-            current_app.logger.info('No reserva found matching the criteria')
-            return render_template('no-resultados-reserva.html')
-        
-        dato = reserva[0]
-        origen = dato['codigo_aeropuerto_origen'] #tabla vuelos
-        destino = dato['codigo_aeropuerto_destino'] #tabla vuelos
-        nro_vuelo = dato['id_vuelo'] #tabla vuelos
-        fecha_salida = dato['fecha_salida'] #tabla vuelos
-        fecha_llegada = dato['fecha_llegada'] #tabla vuelos
-        hora_salida = dato['hora_salida'] #tabla vuelos
-        hora_llegada = dato['hora_llegada'] #tabla vuelos
-        precio = dato['precio'] #tabla vuelos
-        nombre = dato['nombre'] #tabla usuarios
-        apellido = dato['apellido'] #tabla usuarios
-        dni = dato['dni'] #tabla transacciones
-        mail = dato['mail'] #tabla usuarios
-
-        return render_template(
-            'mi-reserva.html', 
-            origen=origen, destino=destino, nro_vuelo=nro_vuelo, 
-            fecha_salida=fecha_salida, fecha_llegada=fecha_llegada, hora_salida=hora_salida, hora_llegada=hora_llegada, 
-            precio=precio, nombre=nombre, apellido=apellido, dni=dni, mail=mail
-        )
-    except Exception as e:
-        current_app.logger.error(f'Unexpected error: {e}')
-        return str(e), 500
-
+@app.route('/reserva-anulada')
+def reserva_anulada():
+    return render_template('reserva-anulada.html')
 
 
 @app.errorhandler(404)
