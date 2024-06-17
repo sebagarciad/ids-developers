@@ -3,8 +3,22 @@ from datetime import datetime
 import re
 import requests
 import secrets
+import os
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
+
+# Configuraciones del servidor de correo
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'fiubaairlines@gmail.com'
+app.config['MAIL_PASSWORD'] = 'urgb cifh xmwj dbzl'
+app.config['MAIL_DEFAULT_SENDER'] = ('FIUBA Airlines', 'fiubaairlines@gmail.com')
+
+mail = Mail(app)
+
 app.secret_key = secrets.token_hex(16)
 
 @app.route("/", methods=["GET", "POST"])
@@ -257,6 +271,27 @@ def compra_confirmada():
     precio = session.get('precio')
     origen = session.get('origen')
     destino = session.get('destino')
+
+    correo = session.get('mail')
+    
+    # Asunto fijo
+    subject = f"Reserva de viaje {origen} - {destino} ({fecha_salida})"
+    
+    # Renderizar la plantilla HTML
+    body = render_template('mail.html', nombre=nombre, apellido=apellido, dni=dni, 
+                                nro_vuelo=nro_vuelo, fecha_salida=fecha_salida, 
+                                hora_salida=hora_salida, fecha_llegada=fecha_llegada, 
+                                hora_llegada=hora_llegada, duracion=duracion, precio=precio, origen=origen, destino=destino)
+
+    msg = Message(subject, recipients=[correo])
+    msg.html = body
+    
+    try:
+        mail.send(msg)
+        flash('Correo enviado con éxito!', 'success')
+    except Exception as e:
+        flash(f'Error al enviar el correo: {str(e)}', 'error')
+
     return render_template('compra-confirmada.html', nombre=nombre, apellido=apellido, dni=dni, 
                                 nro_vuelo=nro_vuelo, fecha_salida=fecha_salida, 
                                 hora_salida=hora_salida, fecha_llegada=fecha_llegada, 
@@ -407,4 +442,5 @@ def page_not_found(e):
 
 
 if __name__ == "__main__":
+    app.secret_key = secrets.token_hex(16)
     app.run("127.0.0.1", port="5001", debug=True)
