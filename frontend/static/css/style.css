@@ -1614,7 +1614,7 @@ div.cs-select span {
   background: #393e46;
   padding: 60px 0 40px;
 }
-#footer p {
+#copyright{
   color: rgba(255, 255, 255, 0.7);
   font-size: 14px;
 }
@@ -1982,11 +1982,48 @@ div.cs-select span {
   align-content: center;
 }
 
-#resultado {
+.resultado {
   color: rgba(0, 0, 0, 0.5);
   font-family: "Open Sans";
   font-size: 20px;
   font-weight: 500;
 }
 
+#titulo-descripcion {
+  color: white;
+  font-size: 30px;
+  align-content: center;
+  text-align: left;
+  margin-right: 1100px;
+  margin-left: 100px;
+}
+
+#descripcion  {
+  color: rgba(255, 255, 255, 0.7);
+  align-content: center;
+  text-align: left;
+  margin-right: 1100px;
+  margin-left: 100px;
+}
+
+#titulo-contacto {
+  color: white;
+  font-size: 30px;
+  align-content: center;
+  text-align: left;
+  margin-right: 50px;
+}
+
+#contacto{
+  color: rgba(255, 255, 255, 0.7);
+  align-content: center;
+  text-align: left;
+  margin-right: 50px;
+}
+
+#info-footer {
+  display: flex;
+  max-width: 100x;
+
+}
 /*# sourceMappingURL=style.css.map */
