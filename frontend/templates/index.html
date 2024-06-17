@@ -13,7 +13,7 @@
 				margin-bottom: 50px;
 			}
 			.entrada{
-				margin-top: 3%;
+				margin-top: 2%;
 			}
 			
 		</style>
@@ -32,7 +32,7 @@
 								  <!-- Nav tabs -->
 								   <ul class="nav nav-tabs" role="tablist">
 								      <li role="presentation" class="active">
-								      	<a href="#flights" aria-controls="flights" role="tab" data-toggle="tab">Flights</a>
+								      	<a href="#flights" aria-controls="flights" role="tab" data-toggle="tab">Buscar vuelos</a>
 								      </li>
 								 
 								   </ul>
@@ -44,7 +44,7 @@
 												<form action="{{url_for('home')}}" method="post">
 												<div class="col-sm-12 mt">
 													<section>
-														<label for="class">Desde:</label>
+														<label for="class">Origen:</label>
 														<select class="cs-select cs-skin-border" name="desde">
 															<option value=""  disabled selected>Provincia</option>
 															<option value="BUE">Buenos Aires</option>
@@ -56,7 +56,7 @@
 												</div>
 												<div class="col-xxs-12 col-xs-6 mt checkin">
 													<section>
-														<label for="class">Hasta:</label>
+														<label for="class">Destino:</label>
 														<select class="cs-select cs-skin-border" name="hasta">
 															<option value="" disabled selected>Provincia</option>
 															<option value="COR" >Cordoba</option>
@@ -73,7 +73,7 @@
 												</div>
 												<div class="col-xxs-12 col-xs-6 mt alternate checkin">
 													<div class="input-field">
-														<label for="date-start">Check In:</label>
+														<label for="date-start">Salida:</label>
 														<input type="text" class="form-control" id="date-start" placeholder="mm/dd/yyyy" name="fecha"/>
 														{% if error_vacio and error_vacio.get("fecha") %}
 														<div class="alert alert-danger">{{ error_vacio.get("fecha") }}</div>
@@ -81,7 +81,7 @@
 													</div>
 												</div>
 												<div class="col-xs-12">
-													<input type="submit" class="btn btn-primary btn-block" value="Search Flight">
+													<input type="submit" class="btn btn-primary btn-block" value="Buscar">
 												</div>
 												</form>
 											</div>
@@ -91,9 +91,9 @@
 							</div>
 							<div class="desc2 animate-box">
 								<div class="col-sm-6 col-sm-push-1 col-md-6 col-md-push-1">
-									<h2>¡¡Elegi Tu Vuelo Ideal!!</h2>	
+									<h2>Elegi tu destino ideal</h2>	
 									</br>
-									<h3>¡¡Promociones exclusivas!!</h3>	
+									<h3>¡Promociones exclusivas!</h3>	
 									<span class="price">Desde $100.000</span>
 								</div>
 							</div>
@@ -109,7 +109,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-8 col-md-offset-2 text-center heading-section animate-box">
-						<h3>Viajes Recomendados</h3>
+						<h3>Ofertas</h3>
 					</div>
 				</div>
 				<div class="row">
@@ -119,7 +119,14 @@
 								<span></span>
 								<h3>Bariloche</h3>						
 								<span class="price">$100.000</span>
-								<a class="btn btn-primary btn-outline" href="#">Ordene ahora <i class="icon-arrow-right22"></i></a>
+								<form action="{{url_for('home')}}" method="post">
+									<input type="hidden" name="desde" value="BUE">
+									<input type="hidden" name="hasta" value="BCR">
+									<input type="hidden" name="fecha" value="07/23/2024">
+									<button type="submit" class="btn btn-primary btn-outline">
+										Ordene ahora <i class="icon-arrow-right22"></i>
+									</button>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -130,7 +137,14 @@
 								<h3>Cordoba</h3>
 								
 								<span class="price">$100.000</span>
-								<a class="btn btn-primary btn-outline" href="#">Ordene ahora<i class="icon-arrow-right22"></i></a>
+								<form action="{{url_for('home')}}" method="post">
+									<input type="hidden" name="desde" value="BUE">
+									<input type="hidden" name="hasta" value="COR">
+									<input type="hidden" name="fecha" value="07/23/2024">
+									<button type="submit" class="btn btn-primary btn-outline">
+										Ordene ahora <i class="icon-arrow-right22"></i>
+									</button>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -140,12 +154,16 @@
 								<span></span>
 								<h3>Mendoza</h3>
 								<span class="price">$100.000</span>
-								<a class="btn btn-primary btn-outline" href="#">Ordene ahora <i class="icon-arrow-right22"></i></a>
+								<form action="{{url_for('home')}}" method="post">
+									<input type="hidden" name="desde" value="BUE">
+									<input type="hidden" name="hasta" value="MDZ">
+									<input type="hidden" name="fecha" value="07/23/2024">
+									<button type="submit" class="btn btn-primary btn-outline">
+										Ordene ahora <i class="icon-arrow-right22"></i>
+									</button>
+								</form>
 							</div>
 						</div>
-					</div>
-					<div class="col-md-12 text-center animate-box">
-						<p><a class="btn btn-primary btn-outline btn-lg" href="#">Vea todas las ofertas <i class="icon-arrow-right22"></i></a></p>
 					</div>
 				</div>
 			</div>
@@ -155,12 +173,9 @@
 	
 
 	</div>
-	<!-- END fh5co-page -->
 
 	</div>
-	<!-- END fh5co-wrapper -->
 
-	<!-- jQuery -->
 
 
 	<script src="{{url_for('static', filename='/js/jquery.min.js', _external=True)}}"></script>
