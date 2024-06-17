@@ -7,6 +7,12 @@ from sqlalchemy.exc import IntegrityError
 from datetime import timedelta
 import requests
 
+GET = "SELECT * FROM {tabla};"
+GET_CONDICIONAL = "SELECT * FROM {tabla} where {where};"
+POST = "INSERT INTO {insert} VALUES {values};"
+PATCH = "UPDATE {tabla} SET {set} WHERE {where};"
+DELETE = "DELETE FROM {tabla} WHERE {where};"
+GET_TRANSACCIONES = "SELECT {select} FROM {_from} JOIN {join_1} JOIN {join_2};"
 
 app = Flask(__name__)
 engine = create_engine("mysql+mysqlconnector://usuario:developers@localhost/tpintro_dev")
@@ -20,8 +26,8 @@ engine = create_engine("mysql+mysqlconnector://usuario:developers@localhost/tpin
 def aeropuertos():
     try:
         conn = engine.connect()
-        query = "SELECT * FROM aeropuertos;"
-        result = conn.execute(text(query))
+        query = text(GET.format(tabla='aeropuertos'))
+        result = conn.execute(query)
         data = [
             {
                 'codigo_aeropuerto': row[0],
@@ -37,13 +43,12 @@ def aeropuertos():
         return jsonify({'message': f'Ocurrio un error: {str(err.__cause__)}'}), 500
       
 @app.route('/aeropuertos', methods=['POST'])
-def sumar_aeropuerto():
+def sumar_aeropuerto(insert='aeropuertos (codigo_aeropuerto, nombre_aeropuerto, ciudad, pais)', 
+                     values='(:codigo_aeropuerto, :nombre_aeropuerto, :ciudad, :pais)'):
     conn = engine.connect()
     new_aeropuerto = request.get_json()
-    query = text("""
-        INSERT INTO aeropuertos (codigo_aeropuerto, nombre_aeropuerto, ciudad, pais)
-        VALUES (:codigo_aeropuerto, :nombre_aeropuerto, :ciudad, :pais)
-    """)
+    query = text(POST.format(insert=insert, values=values))
+
     try:
         result = conn.execute(query, {
             'codigo_aeropuerto': new_aeropuerto['codigo_aeropuerto'],
@@ -59,17 +64,19 @@ def sumar_aeropuerto():
         return jsonify({'message': f'Se ha producido un error: {str(err.__cause__)}'}), 500
 
 @app.route('/aeropuertos/<codigo_aeropuerto>', methods = ['PATCH'])
-def modificar_aeropuerto(codigo_aeropuerto):
+def modificar_aeropuerto(codigo_aeropuerto, tabla='aeropuertos'):
     conn = engine.connect()
     mod_user = request.get_json()
-    query = f"""UPDATE aeropuertos 
-            SET nombre_aeropuerto = '{mod_user['nombre_aeropuerto']}' , ciudad = '{mod_user['ciudad']}' , pais = '{mod_user['pais']}'
-            WHERE codigo_aeropuerto = {codigo_aeropuerto};"""
-    query_validation = f"SELECT * FROM aeropuertos WHERE codigo_aeropuerto = {codigo_aeropuerto};"
+
+    set = f"nombre_aeropuerto = '{mod_user['nombre_aeropuerto']}' , ciudad = '{mod_user['ciudad']}' , pais = '{mod_user['pais']}'"
+    where = f"codigo_aeropuerto = {codigo_aeropuerto}"
+    
+    query = text(PATCH.format(tabla=tabla, set=set, where=where))
+    query_validation = text(GET_CONDICIONAL.format(tabla=tabla, where=where))
     try:
-        validation_result = conn.execute(text(query_validation))
+        validation_result = conn.execute(query_validation)
         if validation_result.rowcount!=0:
-            result = conn.execute(text(query))
+            result = conn.execute(query)
             conn.commit()
             conn.close()
         else:
@@ -77,17 +84,19 @@ def modificar_aeropuerto(codigo_aeropuerto):
             return jsonify({'message': "El aeropuerto no existe"}), 404
     except SQLAlchemyError as err:
         return jsonify({'message': str(err.__cause__)})
-    return jsonify({'message': 'se ha modificado correctamente' + query}), 200
+    return jsonify({'message': 'se ha modificado correctamente' + str(query)}), 200
 
 @app.route('/aeropuertos/<codigo_aeropuerto>', methods = ['DELETE'])
-def delete_aeropuerto(codigo_aeropuerto):
+def delete_aeropuerto(codigo_aeropuerto, tabla='aeropuertos'):
     conn = engine.connect()
-    query = f"DELETE FROM aeropuertos WHERE codigo_aeropuerto = {codigo_aeropuerto};"
-    validation_query = f"SELECT * FROM aeropuertos WHERE codigo_aeropuerto = {codigo_aeropuerto};"
+    where = f"codigo_aeropuerto = {codigo_aeropuerto}"
+
+    query = text(DELETE.format(tabla=tabla, where=where))
+    validation_query = text(GET_CONDICIONAL.format(tabla=tabla, where=where))
     try:
-        val_result = conn.execute(text(validation_query))
+        val_result = conn.execute(validation_query)
         if val_result.rowcount != 0 :
-            result = conn.execute(text(query))
+            result = conn.execute(query)
             conn.commit()
             conn.close()
         else:
@@ -106,8 +115,8 @@ def delete_aeropuerto(codigo_aeropuerto):
 def usuarios():
     try:
         with engine.connect() as conn:
-            query = "SELECT * FROM usuarios;"
-            result = conn.execute(text(query))
+            query = text(GET.format(tabla='usuarios'))
+            result = conn.execute(query)
             data = [
                 {
                     'dni': row[0],
@@ -121,11 +130,12 @@ def usuarios():
         return jsonify({'message': f'Error en la base de datos: {str(e)}'}), 500
 
 @app.route('/usuarios/<dni>', methods = ['GET'])
-def get_usuario(dni):
+def get_usuario(dni, tabla='usuarios'):
     conn = engine.connect()
-    query = f"SELECT * FROM usuarios where dni = {dni};"
+    where = f"dni = {dni}"
+    query = text(GET_CONDICIONAL.format(tabla=tabla, where=where))
     try:
-        result = conn.execute(text(query))
+        result = conn.execute(query)
         conn.commit()
         conn.close()
     except SQLAlchemyError as err:
@@ -141,13 +151,10 @@ def get_usuario(dni):
     return jsonify({"message": "El usuario no existe"}), 404
 
 @app.route('/usuarios', methods = ['POST'])
-def crear_usuario():
+def crear_usuario(insert='usuarios (nombre, apellido, dni, mail)', values='(:nombre, :apellido, :dni, :mail)'):
     conn = engine.connect()
     new_user = request.get_json()
-    query = text("""
-                INSERT INTO usuarios (nombre, apellido, dni, mail) 
-                VALUES (:nombre, :apellido, :dni, :mail) 
-                """)
+    query = text(POST.format(insert=insert, values=values))
     try:
         result = conn.execute(query, {
             'dni': new_user['dni'],
@@ -162,17 +169,18 @@ def crear_usuario():
         return jsonify({'message': 'Se ha producido un error' + str(err.__cause__)})
     
 @app.route('/usuarios/<dni>', methods = ['PATCH'])
-def actualizar_usuario(dni):
+def actualizar_usuario(dni, tabla='usuarios'):
     conn = engine.connect()
     mod_user = request.get_json()
-    query = f"""UPDATE usuarios 
-            SET nombre = "{mod_user['nombre']}" , apellido = "{mod_user['apellido']}" , mail = "{mod_user['mail']}"
-            WHERE dni = {dni};"""
-    query_validation = f"SELECT * FROM usuarios WHERE dni = {dni};"
+
+    set = f"nombre = '{mod_user['nombre']}' , apellido = '{mod_user['apellido']}' , mail = '{mod_user['mail']}'"
+    where = f"dni = {dni}"
+    query = text(PATCH.format(tabla=tabla, set=set, where=where))
+    query_validation = text(GET_CONDICIONAL.format(tabla=tabla, where=where))
     try:
-        validation_result = conn.execute(text(query_validation))
+        validation_result = conn.execute(query_validation)
         if validation_result.rowcount!=0:
-            result = conn.execute(text(query))
+            result = conn.execute(query)
             conn.commit()
             conn.close()
         else:
@@ -180,17 +188,19 @@ def actualizar_usuario(dni):
             return jsonify({'message': "El usuario no existe"}), 404
     except SQLAlchemyError as err:
         return jsonify({'message': str(err.__cause__)})
-    return jsonify({'message': 'El usuario se ha modificado correctamente' + query}), 200    
+    return jsonify({'message': 'El usuario se ha modificado correctamente' + str(query)}), 200    
 
 @app.route('/usuarios/<dni>', methods = ['DELETE'])
-def delete_usuario(dni):
+def delete_usuario(dni, tabla='usuarios'):
     conn = engine.connect()
-    query = f"DELETE FROM usuarios WHERE dni = {dni};"
-    validation_query = f"SELECT * FROM usuarios WHERE dni = {dni}"
+    where = f"dni = {dni}"
+
+    query = text(DELETE.format(tabla=tabla, where=where))
+    validation_query = text(GET_CONDICIONAL.format(tabla=tabla, where=where))
     try:
-        val_result = conn.execute(text(validation_query))
+        val_result = conn.execute(validation_query)
         if val_result.rowcount != 0 :
-            result = conn.execute(text(query))
+            result = conn.execute(query)
             conn.commit()
             conn.close()
         else:
@@ -208,9 +218,9 @@ def delete_usuario(dni):
 @app.route('/vuelos', methods=['GET'])
 def vuelos():
     conn = engine.connect()
-    query = "SELECT * FROM vuelos"
+    query = text(GET.format(tabla='vuelos'))
     try:
-        result = conn.execute(text(query))
+        result = conn.execute(query)
         conn.commit()
         conn.close()
     except SQLAlchemyError as err:
@@ -235,14 +245,12 @@ def vuelos():
     return jsonify(data), 200
 
 @app.route('/vuelos', methods = ['POST'])
-def agregar_vuelo():
+def agregar_vuelo(insert='vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, hora_salida, hora_llegada, duracion, precio, pasajes_disponibles)', 
+                  values='(:codigo_aeropuerto_origen, :codigo_aeropuerto_destino, :hora_salida, :hora_llegada, :duracion, :precio, :pasajes_disponibles)'):
     conn = engine.connect()
     nuevo_vuelo = request.get_json()
-    query = text("""
-        INSERT INTO vuelos (codigo_aeropuerto_origen, codigo_aeropuerto_destino, hora_salida, hora_llegada, duracion, precio, pasajes_disponibles)
-        VALUES (:codigo_aeropuerto_origen, :codigo_aeropuerto_destino, :hora_salida, :hora_llegada, :duracion, :precio, :pasajes_disponibles)
-
-    """)
+    
+    query = text(POST.format(insert=insert, values=values))
     try:
         result = conn.execute(query, {
             'codigo_aeropuerto_origen': nuevo_vuelo['codigo_aeropuerto_origen'],
@@ -268,23 +276,15 @@ def agregar_vuelo():
         return jsonify({'message': f'Se ha producido un error: {str(err.cause)}'}), 500
 
 @app.route('/vuelos/<id_vuelo>', methods = ['PATCH'])
-def actualizar_vuelo(id_vuelo):
+def actualizar_vuelo(id_vuelo, tabla='vuelos', 
+                     set='pasajes_disponibles = :pasajes_disponibles, codigo_aeropuerto_origen = :codigo_aeropuerto_origen, codigo_aeropuerto_destino = :codigo_aeropuerto_destino, hora_salida = :hora_salida, hora_llegada = :hora_llegada, duracion = :duracion, precio = :precio', 
+                     where='id_vuelo = :id_vuelo'):
     conn = engine.connect()
     act_vuelo = request.get_json()
+
+    query = text(PATCH.format(tabla=tabla, set=set, where=where))
     
-    query = text("""
-        UPDATE vuelos SET 
-        pasajes_disponibles = :pasajes_disponibles, 
-        codigo_aeropuerto_origen = :codigo_aeropuerto_origen, 
-        codigo_aeropuerto_destino = :codigo_aeropuerto_destino, 
-        hora_salida = :hora_salida, 
-        hora_llegada = :hora_llegada, 
-        duracion = :duracion, 
-        precio = :precio
-        WHERE id_vuelo = :id_vuelo
-    """)
-    
-    query_validation = text("SELECT * FROM vuelos WHERE id_vuelo = :id_vuelo")
+    query_validation = text(GET_CONDICIONAL.format(tabla=tabla, where=where))
     
     try:
         validation_result = conn.execute(query_validation, {'id_vuelo': id_vuelo})
@@ -314,16 +314,16 @@ def actualizar_vuelo(id_vuelo):
     return jsonify({'message': message}), 200
 
 @app.route('/vuelos/<id_vuelo>', methods = ['DELETE'])
-def delete_vuelo(id_vuelo):
+def delete_vuelo(id_vuelo, tabla='vuelos'):
     conn = engine.connect()
-    query = f"""DELETE FROM vuelos
-            WHERE id_vuelo = {id_vuelo};
-            """
-    validation_query = f"SELECT * FROM vuelos WHERE id_vuelo = {id_vuelo}"
+    where = f"id_vuelo = {id_vuelo}"
+    
+    query = text(DELETE.format(tabla=tabla, where=where))
+    validation_query = text(GET_CONDICIONAL.format(tabla=tabla, where=where))
     try:
-        val_result = conn.execute(text(validation_query))
+        val_result = conn.execute(validation_query)
         if val_result.rowcount != 0 :
-            result = conn.execute(text(query))
+            result = conn.execute(query)
             conn.commit()
             conn.close()
         else:
@@ -338,18 +338,32 @@ def delete_vuelo(id_vuelo):
 #   TABLA TRANSACCIONES
 #
 #
-@app.route('/transacciones', methods = ['GET'])
-def transacciones():
+@app.route('/transacciones', methods=['GET'])
+def transacciones(select='t.num_transaccion, t.id_vuelo, t.total_transaccion, t.dni, v.codigo_aeropuerto_origen, v.codigo_aeropuerto_destino, v.fecha_salida, v.fecha_llegada, v.hora_salida, v.hora_llegada, v.duracion, v.precio, v.pasajes_disponibles, u.nombre, u.apellido, u.mail', 
+                  _from='transacciones t', join_1='vuelos v ON t.id_vuelo = v.id_vuelo', join_2='usuarios u ON t.dni = u.dni'):
     try:
         conn = engine.connect()
-        query = "SELECT * FROM transacciones;"
-        result = conn.execute(text(query))
+        
+        query = text(GET_TRANSACCIONES.format(select=select, _from=_from, join_1=join_1, join_2=join_2))
+        result = conn.execute(query)
         data = [
             {
                 'num_transaccion': row[0],
                 'id_vuelo': row[1],
                 'total_transaccion': row[2],
-                'dni': row[3]
+                'dni': row[3],
+                'codigo_aeropuerto_origen': row[4],
+                'codigo_aeropuerto_destino': row[5],
+                'fecha_salida': str(row[6]),
+                'fecha_llegada': str(row[7]),
+                'hora_salida': str(row[8]),
+                'hora_llegada': str(row[9]),
+                'duracion': str(row[10]),
+                'precio': row[11],
+                'pasajes_disponibles': row[12],
+                'nombre': row[13],
+                'apellido': row[14],
+                'mail': row[15]
             } for row in result
         ]
         conn.close()
@@ -358,14 +372,13 @@ def transacciones():
         conn.close()
         return jsonify({'message': f'Ocurrio un error: {str(err.__cause__)}'}), 500
 
+
 @app.route('/transacciones', methods = ['POST'])
-def crear_transaccion():
+def crear_transaccion(insert='transacciones (id_vuelo, total_transaccion, dni)', 
+                      values='(:id_vuelo, :total_transaccion, :dni)'):
     conn = engine.connect()
     new_transaccion = request.get_json()
-    query = text("""
-        INSERT INTO transacciones (id_vuelo, total_transaccion, dni)
-        VALUES (:id_vuelo, :total_transaccion, :dni)
-    """)
+    query = text(POST.format(insert=insert, values=values))
     try:
         result = conn.execute(query, {
             'id_vuelo': new_transaccion['id_vuelo'],
@@ -386,18 +399,17 @@ def crear_transaccion():
         conn.close()
         return jsonify({'message': f'Se ha producido un error: {str(err.__cause__)}'}), 500
 
+
 @app.route('/transacciones/<num_transaccion>', methods = ['PATCH'])
-def modificar_transacciones(num_transaccion):
+def modificar_transacciones(num_transaccion, tabla='transacciones', 
+                            set='id_vuelo = :id_vuelo, total_transaccion = :total_transaccion, dni = :dni', 
+                            where='num_transaccion = :num_transaccion'):
     conn = engine.connect()
     mod_transaccion = request.get_json()
-    query = text("""
-            UPDATE transacciones
-            SET id_vuelo = :id_vuelo, total_transaccion = :total_transaccion, dni = :dni
-            WHERE num_transaccion = :num_transaccion
-            """)
-    query_validation = f"SELECT * FROM transacciones WHERE num_transaccion = {num_transaccion};"
+    query = text(PATCH.format(tabla=tabla, set=set, where=where))
+    query_validation = text(GET_CONDICIONAL.format(tabla=tabla, where=where))
     try:
-        val_result = conn.execute(text(query_validation))
+        val_result = conn.execute(query_validation)
         if val_result.rowcount!=0:
             result = conn.execute(query, {
             'id_vuelo': mod_transaccion['id_vuelo'],
@@ -414,17 +426,18 @@ def modificar_transacciones(num_transaccion):
         return jsonify({'message': str(err.__cause__)})
     return jsonify({'message': 'La transacción se ha modificado correctamente'}), 200
 
+
 @app.route('/transacciones/<num_transaccion>', methods = ['DELETE'])
-def delete_transaccion(num_transaccion):
+def delete_transaccion(num_transaccion, tabla='transacciones'):
     conn = engine.connect()
-    query = f"""DELETE FROM transacciones
-            WHERE num_transaccion = {num_transaccion};
-            """
-    validation_query = f"SELECT * FROM transacciones WHERE num_transaccion = {num_transaccion}"
+    where = f"num_transaccion = {num_transaccion}"
+
+    query = text(DELETE.format(tabla=tabla, where=where))
+    validation_query = text(GET_CONDICIONAL.format(tabla=tabla, where=where))
     try:
-        val_result = conn.execute(text(validation_query))
+        val_result = conn.execute(validation_query)
         if val_result.rowcount != 0 :
-            result = conn.execute(text(query))
+            result = conn.execute(query)
             conn.commit()
             conn.close()
         else:
