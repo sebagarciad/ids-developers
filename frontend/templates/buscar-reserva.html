@@ -40,11 +40,11 @@
 												</div>
 												<div class="col-sm-12 mt">
 													<section>
-														<label for="class">Número de transacción:</label>
-                                                        <input type="text" class="form-control" id="nro_transaccion" placeholder="Número de transacción" name="nro_transaccion"/>
+														<label for="class">Número de vuelo:</label>
+                                                        <input type="text" class="form-control" id="nro_vuelo" placeholder="Número de vuelo" name="nro_vuelo"/>
 													</section>
-													{% if error_vacio and error_vacio.get("nro_transaccion") %}
-														<div class="alert alert-danger">{{ error_vacio.get("nro_transaccion") }}</div>
+													{% if error_vacio and error_vacio.get("nro_vuelo") %}
+														<div class="alert alert-danger">{{ error_vacio.get("nro_vuelo") }}</div>
 													{% endif %}
 												</div>
 												<div class="col-xs-12">

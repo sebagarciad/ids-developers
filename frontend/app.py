@@ -239,26 +239,26 @@ def compra_confirmada():
 def buscar_reserva():
     if request.method == "POST":
         dni = request.form.get("dni")
-        nro_transaccion = request.form.get("nro_transaccion")
+        nro_vuelo = request.form.get("nro_vuelo")
 
         error_vacio = {}
         if not dni or not 7 <= len(dni) <= 8:
             error_vacio["dni"] = "Ingresar un DNI valido."
-        if not nro_transaccion:
-            error_vacio["nro_transaccion"] = "Debe ingresar el número de pasaje"
+        if not nro_vuelo:
+            error_vacio["nro_vuelo"] = "Debe ingresar el número de vuelo"
         if error_vacio:
-            return render_template('buscar-reserva.html', error_vacio=error_vacio, dni=dni, nro_transaccion=nro_transaccion)
+            return render_template('buscar-reserva.html', error_vacio=error_vacio, dni=dni, nro_vuelo=nro_vuelo)
         
-        return render_template('mi-reserva.html', dni=dni, nro_transaccion=nro_transaccion)
+        return render_template('mi-reserva.html', dni=dni, nro_vuelo=nro_vuelo)
     return render_template('buscar-reserva.html')
 
-@app.route('/mi-reserva', methods = ["GET"])
+@app.route('/mi-reserva', methods=["GET", "DELETE"])
 def mi_reserva():
     dni = request.args.get('dni')
-    nro_transaccion = request.args.get('nro_transaccion')
+    nro_vuelo = request.args.get('nro_vuelo')
 
-    if not dni or not nro_transaccion:
-        current_app.logger.error('Missing parameters: dni, or nro_transaccion')
+    if not dni or not nro_vuelo:
+        current_app.logger.error('Missing parameters: dni, or nro_vuelo')
         return render_template('no-reserva.html')
 
     try:
@@ -273,13 +273,15 @@ def mi_reserva():
         reserva = [
             dato for dato in reserva_data
             if dato['dni'] == dni and
-               dato['num_transaccion'] == nro_transaccion
+               dato['id_vuelo'] == int(nro_vuelo)
         ]
+
+        print(reserva)  # Log filtered data for debugging
 
         if not reserva:
             current_app.logger.info('No reserva found matching the criteria')
             return render_template('no-resultados-reserva.html')
-
+        
         dato = reserva[0]
         origen = dato['codigo_aeropuerto_origen'] #tabla vuelos
         destino = dato['codigo_aeropuerto_destino'] #tabla vuelos
@@ -303,6 +305,7 @@ def mi_reserva():
     except Exception as e:
         current_app.logger.error(f'Unexpected error: {e}')
         return str(e), 500
+
 
 
 @app.errorhandler(404)
