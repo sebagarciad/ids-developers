@@ -1982,8 +1982,8 @@ div.cs-select span {
   align-content: center;
 }
 
-.resultado {
-  color: rgba(0, 0, 0, 0.5);
+#resultado {
+  color: #636363;
   font-family: "Open Sans";
   font-size: 20px;
   font-weight: 500;
