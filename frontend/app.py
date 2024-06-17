@@ -333,19 +333,19 @@ def buscar_reserva():
             dato = reserva[0]
             vuelo = vuelo_filtrado[0]
             usuario = usuario_filtrado[0]
-            origen = vuelo['codigo_aeropuerto_origen'] #tabla vuelos
-            destino = vuelo['codigo_aeropuerto_destino'] #tabla vuelos
-            nro_vuelo = dato['id_vuelo'] #tabla transacciones
+            origen = vuelo['codigo_aeropuerto_origen']
+            destino = vuelo['codigo_aeropuerto_destino']
+            nro_vuelo = dato['id_vuelo']
             duracion = vuelo['duracion']
-            fecha_salida = vuelo['fecha_salida'] #tabla vuelos
-            fecha_llegada = vuelo['fecha_llegada'] #tabla vuelos
-            hora_salida = vuelo['hora_salida'] #tabla vuelos
-            hora_llegada = vuelo['hora_llegada'] #tabla vuelos
-            precio = vuelo['precio'] #tabla vuelos
-            nombre = usuario['nombre'] #tabla usuarios
-            apellido = usuario['apellido'] #tabla usuarios
-            dni = dato['dni'] #tabla transacciones
-            mail = usuario['mail'] #tabla usuarios
+            fecha_salida = vuelo['fecha_salida']
+            fecha_llegada = vuelo['fecha_llegada']
+            hora_salida = vuelo['hora_salida']
+            hora_llegada = vuelo['hora_llegada']
+            precio = vuelo['precio']
+            nombre = usuario['nombre']
+            apellido = usuario['apellido']
+            dni = dato['dni']
+            mail = usuario['mail']
             num_transaccion = dato['num_transaccion']
 
             return redirect(url_for('mi_reserva', 
@@ -357,7 +357,7 @@ def buscar_reserva():
             return str(e), 500
     return render_template('buscar-reserva.html')
 
-@app.route('/reserva', methods=["GET", "POST"])
+@app.route('/mi-reserva', methods=["GET", "POST"])
 def mi_reserva():
     if request.method == "GET":
         # Obtener parámetros de la URL
@@ -398,11 +398,7 @@ def mi_reserva():
             current_app.logger.error(f'Error borrando la transaccion de la base de datos: {e}')
             return str(e), 500
         
-        return redirect(url_for('reserva_anulada'))
-    
-@app.route('/reserva-anulada')
-def reserva_anulada():
-    return render_template('reserva_anulada.html')
+        return render_template('reserva-anulada.html')
 
 
 @app.errorhandler(404)
