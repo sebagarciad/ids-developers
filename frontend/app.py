@@ -77,6 +77,9 @@ def resultados_busqueda():
         hora_llegada = vuelo['hora_llegada']
         duracion = vuelo['duracion']
         precio = vuelo['precio']
+        pasajes_disponibles = vuelo['pasajes_disponibles']
+        codigo_aeropuerto_origen = vuelo['codigo_aeropuerto_origen']
+        codigo_aeropuerto_destino = vuelo['codigo_aeropuerto_destino']
 
         session['origen'] = origen
         session['destino'] = destino
@@ -87,6 +90,9 @@ def resultados_busqueda():
         session['hora_llegada'] = hora_llegada
         session['duracion'] = duracion
         session['precio'] = precio
+        session['pasajes_disponibles'] = pasajes_disponibles 
+        session['codigo_aeropuerto_origen'] = codigo_aeropuerto_origen 
+        session['codigo_aeropuerto_destino'] = codigo_aeropuerto_destino 
 
         return render_template(
         'resultados-de-busqueda.html', 
@@ -190,11 +196,25 @@ def pago():
         hora_llegada = session.get('hora_llegada')
         duracion = session.get('duracion')
         precio = session.get('precio')
+        pasajes_disponibles = session.get('pasajes_disponibles')
+        codigo_aeropuerto_origen = session.get('codigo_aeropuerto_origen')
+        codigo_aeropuerto_destino = session.get('codigo_aeropuerto_destino')
 
         datos_transaccion = {
             "id_vuelo": nro_vuelo,
             "dni": dni,
             "total_transaccion": precio
+        }
+
+        datos_modificacion_de_vuelos = {
+            'pasajes_disponibles': str(int(pasajes_disponibles)-1),
+            'codigo_aeropuerto_origen': codigo_aeropuerto_origen,
+            'codigo_aeropuerto_destino': codigo_aeropuerto_destino,
+            'hora_salida': hora_salida,
+            'hora_llegada': hora_llegada,
+            'duracion': duracion,
+            'precio': precio,
+            "id_vuelo": nro_vuelo
         }
 
         # Send user data to API
@@ -203,6 +223,14 @@ def pago():
             api_response.raise_for_status()
         except requests.exceptions.RequestException as e:
             current_app.logger.error(f'Error al enviar datos de usuario al API: {e}')
+            return str(e), 500
+        
+        #Modifica la tabla vuelos para restarle un pasaje
+        try:
+            api_response = requests.patch(f"http://localhost:8080/vuelos/{nro_vuelo}", json=datos_modificacion_de_vuelos)
+            api_response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            current_app.logger.error(f'Error al modificar los vuelos: {e}')
             return str(e), 500
 
         return redirect(url_for("compra_confirmada", nombre=nombre, apellido=apellido, dni=dni, 

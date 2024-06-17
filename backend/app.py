@@ -409,7 +409,7 @@ def modificar_transacciones(num_transaccion, tabla='transacciones',
     query = text(PATCH.format(tabla=tabla, set=set, where=where))
     query_validation = text(GET_CONDICIONAL.format(tabla=tabla, where=where))
     try:
-        val_result = conn.execute(query_validation)
+        val_result = conn.execute(query_validation, {'num_transaccion': num_transaccion})
         if val_result.rowcount!=0:
             result = conn.execute(query, {
             'id_vuelo': mod_transaccion['id_vuelo'],
