@@ -46,7 +46,7 @@
 													<section>
 														<label for="class">Desde:</label>
 														<select class="cs-select cs-skin-border" name="desde">
-															<option value=""  disabled selected>Seleccione una opción</option>
+															<option value=""  disabled selected>Provincia</option>
 															<option value="BUE">Buenos Aires</option>
 														</select>
 													</section>
@@ -58,7 +58,7 @@
 													<section>
 														<label for="class">Hasta:</label>
 														<select class="cs-select cs-skin-border" name="hasta">
-															<option value="" disabled selected>Seleccione una opción</option>
+															<option value="" disabled selected>Provincia</option>
 															<option value="COR" >Cordoba</option>
 															<option value="BCR" >Bariloche</option>
 															<option value="MDZ" >Mendoza</option>
@@ -91,11 +91,10 @@
 							</div>
 							<div class="desc2 animate-box">
 								<div class="col-sm-6 col-sm-push-1 col-md-6 col-md-push-1">
-									<p>HandCrafted by <a href="http://frehtml5.co/" target="_blank" class="fh5co-site-name">FreeHTML5.co</a></p>
-									<h2>Exclusive Limited Time Offer</h2>
-									<h3>Fly to Hong Kong via Los Angeles, USA</h3>
-									<span class="price">$599</span>
-									<!-- <p><a class="btn btn-primary btn-lg" href="#">Get Started</a></p> -->
+									<h2>¡¡Elegi Tu Vuelo Ideal!!</h2>	
+									</br>
+									<h3>¡¡Promociones exclusivas!!</h3>	
+									<span class="price">Desde $100.000</span>
 								</div>
 							</div>
 						</div>
@@ -110,8 +109,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-8 col-md-offset-2 text-center heading-section animate-box">
-						<h3>Hot Tours</h3>
-						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+						<h3>Viajes Recomendados</h3>
 					</div>
 				</div>
 				<div class="row">
@@ -119,10 +117,9 @@
 						<div href="#"><img src="{{url_for('static', filename='/images/bariloche.jpg', _external=True)}}" alt="Free HTML5 Website Template by FreeHTML5.co" class="img-responsive">
 							<div class="desc">
 								<span></span>
-								<h3>Bariloche</h3>
-								<span>3 nights + Flight 5*Hotel</span>
-								<span class="price">$1,000</span>
-								<a class="btn btn-primary btn-outline" href="#">Book Now <i class="icon-arrow-right22"></i></a>
+								<h3>Bariloche</h3>						
+								<span class="price">$100.000</span>
+								<a class="btn btn-primary btn-outline" href="#">Ordene ahora <i class="icon-arrow-right22"></i></a>
 							</div>
 						</div>
 					</div>
@@ -131,9 +128,9 @@
 							<div class="desc">
 								<span></span>
 								<h3>Cordoba</h3>
-								<span>4 nights + Flight 5*Hotel</span>
-								<span class="price">$1,000</span>
-								<a class="btn btn-primary btn-outline" href="#">Book Now <i class="icon-arrow-right22"></i></a>
+								
+								<span class="price">$100.000</span>
+								<a class="btn btn-primary btn-outline" href="#">Ordene ahora<i class="icon-arrow-right22"></i></a>
 							</div>
 						</div>
 					</div>
@@ -142,14 +139,13 @@
 							<div class="desc">
 								<span></span>
 								<h3>Mendoza</h3>
-								<span>2 nights + Flight 4*Hotel</span>
-								<span class="price">$1,000</span>
-								<a class="btn btn-primary btn-outline" href="#">Book Now <i class="icon-arrow-right22"></i></a>
+								<span class="price">$100.000</span>
+								<a class="btn btn-primary btn-outline" href="#">Ordene ahora <i class="icon-arrow-right22"></i></a>
 							</div>
 						</div>
 					</div>
 					<div class="col-md-12 text-center animate-box">
-						<p><a class="btn btn-primary btn-outline btn-lg" href="#">See All Offers <i class="icon-arrow-right22"></i></a></p>
+						<p><a class="btn btn-primary btn-outline btn-lg" href="#">Vea todas las ofertas <i class="icon-arrow-right22"></i></a></p>
 					</div>
 				</div>
 			</div>
@@ -195,3 +191,20 @@
 
 	{% endblock %}
 
+{% block footer %}
+	<div>
+		<footer id="info-footer">		
+			<div>
+				<h5 id="titulo-descripcion">Fiuba Airlines</h5>		
+				<p id="descripcion">Somos más que una aerolínea, somos tu puente hacia el mundo. 
+					En Fiuba Airlines, nos dedicamos a proporcionar experiencias 
+					de viaje excepcionales, conectando a personas y culturas a 
+					través de nuestros vuelos seguros, cómodos y eficientes.</p>
+			</div>
+			<div>
+				<h5 id="titulo-contacto">Contactenos:</h5>	
+				<p id="contacto">54 (11) 5199 3555 Lun a Vie de 8 a 20hs. Sáb, Dom y feriados de 8 a 14 hs.</p>	
+			</div>						
+		</footer>
+	</div>
+{% endblock %}
