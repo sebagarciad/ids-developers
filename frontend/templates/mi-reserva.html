@@ -6,7 +6,12 @@
 		
 
 		<!-- end:header-top -->
-	
+	<style>
+		p{
+			font-weight: 100;
+			color: black !important;
+		}
+	</style>
 		<div class="fh5co-hero">
 			<div class="fh5co-overlay"></div>
 			<div class="fh5co-cover" data-stellar-background-ratio="0.5" style="background-image: url(images/cover_bg_1.jpg);">
@@ -83,9 +88,11 @@
 												</section>
 											</div>
 											<div class="col-xs-12">
-												<a href="{{ url_for('buscar_reserva', _external=True)}}"><button type="submit" class="btn btn-primary btn-block">Buscar otra reserva</button></a>
+												<form action="{{url_for('mi_reserva', _external=True)}}" method="post">
+													<button type="submit" class="btn btn-primary btn-block">Anular reserva</button>
+												</form>
 												</br>
-												<a href="{{ url_for('reserva_anulada', _external=True)}}"><button class="btn btn-primary btn-block">Anular reserva</button></a>
+												<a href="{{ url_for('buscar_reserva', _external=True)}}"><button class="btn btn-primary btn-block">Buscar otra reserva</button></a>	
 											</div>
 										</div>
 									</div>
