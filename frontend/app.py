@@ -1,10 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, current_app, session
+from flask import Flask, render_template, request, redirect, url_for, current_app, session, flash
 from datetime import datetime
 import re
 import requests
 import secrets
-import os
-from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
