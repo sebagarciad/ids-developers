@@ -66,6 +66,14 @@ def resultados_busqueda():
     except requests.exceptions.RequestException as e:
         current_app.logger.error(f'Error fetching vuelos: {e}')
         return str(e), 500
+    
+    try:
+        response = requests.get('http://localhost:8080/aeropuertos')
+        response.raise_for_status()
+        aeropuertos_data = response.json()
+    except requests.exceptions.RequestException as e:
+        current_app.logger.error(f'Error fetching vuelos: {e}')
+        return str(e), 500
 
     try:
         vuelos_filtrados = [
@@ -75,11 +83,31 @@ def resultados_busqueda():
                vuelo['fecha_salida'] == fecha
         ]
 
+        aeropuerto_origen = [
+            aeropuerto for aeropuerto in aeropuertos_data
+            if aeropuerto['codigo_aeropuerto'] == desde
+        ]
+
+        aeropuerto_destino = [
+            aeropuerto for aeropuerto in aeropuertos_data
+            if aeropuerto['codigo_aeropuerto'] == hasta
+        ]
+
         if not vuelos_filtrados:
             current_app.logger.info('No vuelos found matching the criteria')
             return render_template('no-resultados.html')
+        
+        if not aeropuerto_origen:
+            current_app.logger.info('No aeropuerto origen found matching the criteria')
+            return render_template('no-resultados.html')
+        
+        if not aeropuerto_destino:
+            current_app.logger.info('No aeropuerto destino found matching the criteria')
+            return render_template('no-resultados.html')
 
         vuelo = vuelos_filtrados[0]
+        ciudad_origen = aeropuerto_origen[0]['ciudad']
+        ciudad_destino = aeropuerto_destino[0]['ciudad']
         origen = vuelo['codigo_aeropuerto_origen']
         destino = vuelo['codigo_aeropuerto_destino']
         nro_vuelo = vuelo['id_vuelo']
@@ -105,13 +133,15 @@ def resultados_busqueda():
         session['pasajes_disponibles'] = pasajes_disponibles 
         session['codigo_aeropuerto_origen'] = codigo_aeropuerto_origen 
         session['codigo_aeropuerto_destino'] = codigo_aeropuerto_destino 
+        session['ciudad_origen'] = ciudad_origen
+        session['ciudad_destino'] = ciudad_destino
 
         return render_template(
         'resultados-de-busqueda.html', 
         origen=origen, destino=destino, nro_vuelo=session['nro_vuelo'], 
         fecha_salida=session['fecha_salida'], fecha_llegada=session['fecha_llegada'], 
         hora_salida=session['hora_salida'], hora_llegada=session['hora_llegada'], 
-        duracion=session['duracion'], precio=session['precio'], fecha=fecha
+        duracion=session['duracion'], precio=session['precio'], fecha=fecha, ciudad_origen=session['ciudad_origen'], ciudad_destino=session['ciudad_destino']
     )
 
     except KeyError as e:
@@ -136,7 +166,7 @@ def info_usuario():
             errores_validacion["apellido"] = "El apellido es obligatorio"
         if not dni or not 7 <= len(dni) <= 8:
             errores_validacion["dni"] = "Ingresar un DNI valido."
-        if not mail or not re.match(r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$', mail):
+        if not mail or not re.match(r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+(\.\w+){1,2}$', mail):
             errores_validacion["mail"] = "Ingresar una direccion de correo electronico valida"
 
         if errores_validacion:
@@ -165,7 +195,7 @@ def info_usuario():
             return str(e), 500
 
         # If user data was successfully sent, proceed to pago
-        if api_response.status_code == 201:
+        if api_response.status_code == 201 or api_response.status_code == 200:
             return redirect(url_for("pago"))
         else:
             return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
@@ -211,6 +241,8 @@ def pago():
         pasajes_disponibles = session.get('pasajes_disponibles')
         codigo_aeropuerto_origen = session.get('codigo_aeropuerto_origen')
         codigo_aeropuerto_destino = session.get('codigo_aeropuerto_destino')
+        ciudad_origen = session.get('ciudad_origen')
+        ciudad_destino = session.get('ciudad_destino')
 
         datos_transaccion = {
             "id_vuelo": nro_vuelo,
@@ -245,10 +277,11 @@ def pago():
             current_app.logger.error(f'Error al modificar los vuelos: {e}')
             return str(e), 500
 
-        return redirect(url_for("compra_confirmada", nombre=nombre, apellido=apellido, dni=dni, 
+        return redirect(url_for('compra_confirmada', nombre=nombre, apellido=apellido, dni=dni, 
                                 nro_vuelo=nro_vuelo, fecha_salida=fecha_salida, 
                                 hora_salida=hora_salida, fecha_llegada=fecha_llegada, 
-                                hora_llegada=hora_llegada, duracion=duracion, precio=precio))
+                                hora_llegada=hora_llegada, duracion=duracion, precio=precio, ciudad_origen=ciudad_origen, 
+                                ciudad_destino=ciudad_destino))
 
 
 
@@ -269,6 +302,8 @@ def compra_confirmada():
     precio = session.get('precio')
     origen = session.get('origen')
     destino = session.get('destino')
+    ciudad_origen = session.get('ciudad_origen')
+    ciudad_destino = session.get('ciudad_destino')
 
     correo = session.get('mail')
     
@@ -279,7 +314,8 @@ def compra_confirmada():
     body = render_template('mail.html', nombre=nombre, apellido=apellido, dni=dni, 
                                 nro_vuelo=nro_vuelo, fecha_salida=fecha_salida, 
                                 hora_salida=hora_salida, fecha_llegada=fecha_llegada, 
-                                hora_llegada=hora_llegada, duracion=duracion, precio=precio, origen=origen, destino=destino)
+                                hora_llegada=hora_llegada, duracion=duracion, precio=precio, origen=origen, 
+                                destino=destino, ciudad_origen=ciudad_origen, ciudad_destino=ciudad_destino)
 
     msg = Message(subject, recipients=[correo])
     msg.html = body
@@ -293,7 +329,8 @@ def compra_confirmada():
     return render_template('compra-confirmada.html', nombre=nombre, apellido=apellido, dni=dni, 
                                 nro_vuelo=nro_vuelo, fecha_salida=fecha_salida, 
                                 hora_salida=hora_salida, fecha_llegada=fecha_llegada, 
-                                hora_llegada=hora_llegada, duracion=duracion, precio=precio, origen=origen, destino=destino)
+                                hora_llegada=hora_llegada, duracion=duracion, precio=precio, origen=origen, 
+                                destino=destino, ciudad_origen=ciudad_origen, ciudad_destino=ciudad_destino)
 
 
 @app.route('/buscar-reserva', methods = ["GET", "POST"])
@@ -333,6 +370,14 @@ def buscar_reserva():
         except requests.exceptions.RequestException as e:
             current_app.logger.error(f'Error fetching usuarios: {e}')
             return str(e), 500
+        
+        try:
+            response = requests.get('http://localhost:8080/aeropuertos')
+            response.raise_for_status()
+            aeropuertos_data = response.json()
+        except requests.exceptions.RequestException as e:
+            current_app.logger.error(f'Error fetching vuelos: {e}')
+            return str(e), 500
 
         try:
             reserva = [
@@ -351,6 +396,7 @@ def buscar_reserva():
                 if usuario['dni'] == int(dni)
             ]
 
+            
             if not reserva:
                 current_app.logger.info('No reserva found matching the criteria')
                 return render_template('no-reserva.html')
@@ -362,6 +408,17 @@ def buscar_reserva():
             if not usuario_filtrado:
                 current_app.logger.info('No usuario found matching the criteria')
                 return render_template('no-reserva.html')
+            
+
+            aeropuerto_origen = [
+                aeropuerto for aeropuerto in aeropuertos_data
+                if aeropuerto['codigo_aeropuerto'] == vuelo_filtrado[0]['codigo_aeropuerto_origen']
+            ]
+
+            aeropuerto_destino = [
+                aeropuerto for aeropuerto in aeropuertos_data
+                if aeropuerto['codigo_aeropuerto'] == vuelo_filtrado[0]['codigo_aeropuerto_origen']
+            ]
             
             dato = reserva[0]
             vuelo = vuelo_filtrado[0]
@@ -380,11 +437,14 @@ def buscar_reserva():
             dni = dato['dni']
             mail = usuario['mail']
             num_transaccion = dato['num_transaccion']
+            ciudad_origen = aeropuerto_origen[0]['ciudad']
+            ciudad_destino = aeropuerto_destino[0]['ciudad']
 
             return redirect(url_for('mi_reserva', 
                                 origen=origen, destino=destino, nro_vuelo=nro_vuelo, 
                                 fecha_salida=fecha_salida, fecha_llegada=fecha_llegada, hora_salida=hora_salida, hora_llegada=hora_llegada, 
-                                precio=precio, nombre=nombre, apellido=apellido, dni=dni, mail=mail, duracion=duracion, num_transaccion=num_transaccion))
+                                precio=precio, nombre=nombre, apellido=apellido, dni=dni, mail=mail, duracion=duracion, num_transaccion=num_transaccion, 
+                                ciudad_origen=ciudad_origen, ciudad_destino=ciudad_destino))
         except Exception as e:
             current_app.logger.error(f'Unexpected error: {e}')
             return str(e), 500
@@ -408,6 +468,27 @@ def mi_reserva():
         mail = request.args.get('mail')
         duracion = request.args.get('duracion')
         num_transaccion = request.args.get('num_transaccion')
+        
+        try:
+            response = requests.get('http://localhost:8080/aeropuertos')
+            response.raise_for_status()
+            aeropuertos_data = response.json()
+        except requests.exceptions.RequestException as e:
+            current_app.logger.error(f'Error fetching vuelos: {e}')
+            return str(e), 500
+        
+        aeropuerto_origen = [
+            aeropuerto for aeropuerto in aeropuertos_data
+            if aeropuerto['codigo_aeropuerto'] == origen
+        ]
+
+        aeropuerto_destino = [
+            aeropuerto for aeropuerto in aeropuertos_data
+            if aeropuerto['codigo_aeropuerto'] == destino
+        ]
+
+        ciudad_origen = aeropuerto_origen[0]['ciudad']
+        ciudad_destino = aeropuerto_destino[0]['ciudad']
 
         # Guardar num_transaccion en la sesión
         session['num_transaccion'] = num_transaccion
@@ -415,7 +496,8 @@ def mi_reserva():
         return render_template('mi-reserva.html', origen=origen, destino=destino, nro_vuelo=nro_vuelo, 
                                fecha_salida=fecha_salida, fecha_llegada=fecha_llegada, hora_salida=hora_salida, 
                                hora_llegada=hora_llegada, precio=precio, nombre=nombre, apellido=apellido, 
-                               dni=dni, mail=mail, duracion=duracion, num_transaccion=num_transaccion)
+                               dni=dni, mail=mail, duracion=duracion, num_transaccion=num_transaccion, ciudad_origen=ciudad_origen, 
+                               ciudad_destino=ciudad_destino)
     
     if request.method == "POST":
         num_transaccion = session.get('num_transaccion')
