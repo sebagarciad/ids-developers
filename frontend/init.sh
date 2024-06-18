@@ -1,3 +1,5 @@
+#!/bin/bash
+
 pip install flask
-pip install Flask-Mail
+pip install flask-mail
 pip install requests
