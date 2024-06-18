@@ -94,15 +94,15 @@ def resultados_busqueda():
         ]
 
         if not vuelos_filtrados:
-            current_app.logger.info('No vuelos found matching the criteria')
+            current_app.logger.info('No se encontraron vuelos que coincidan')
             return render_template('no-resultados.html')
         
         if not aeropuerto_origen:
-            current_app.logger.info('No aeropuerto origen found matching the criteria')
+            current_app.logger.info('No se encontro el aeropuerto de origen')
             return render_template('no-resultados.html')
         
         if not aeropuerto_destino:
-            current_app.logger.info('No aeropuerto destino found matching the criteria')
+            current_app.logger.info('No se encontro el aeropuerto de destino')
             return render_template('no-resultados.html')
 
         vuelo = vuelos_filtrados[0]
@@ -135,6 +135,10 @@ def resultados_busqueda():
         session['codigo_aeropuerto_destino'] = codigo_aeropuerto_destino 
         session['ciudad_origen'] = ciudad_origen
         session['ciudad_destino'] = ciudad_destino
+
+        if not pasajes_disponibles:
+            current_app.logger.info('No hay pasajes disponibles')
+            return render_template('no-resultados.html')
 
         return render_template(
         'resultados-de-busqueda.html', 
