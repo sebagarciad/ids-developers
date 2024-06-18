@@ -441,12 +441,14 @@ def buscar_reserva():
             num_transaccion = dato['num_transaccion']
             ciudad_origen = aeropuerto_origen[0]['ciudad']
             ciudad_destino = aeropuerto_destino[0]['ciudad']
+            pasajes_disponibles = vuelo['pasajes_disponibles']
+
 
             return redirect(url_for('mi_reserva', 
                                 origen=origen, destino=destino, nro_vuelo=nro_vuelo, 
                                 fecha_salida=fecha_salida, fecha_llegada=fecha_llegada, hora_salida=hora_salida, hora_llegada=hora_llegada, 
                                 precio=precio, nombre=nombre, apellido=apellido, dni=dni, mail=mail, duracion=duracion, num_transaccion=num_transaccion, 
-                                ciudad_origen=ciudad_origen, ciudad_destino=ciudad_destino))
+                                ciudad_origen=ciudad_origen, ciudad_destino=ciudad_destino, pasajes_disponibles=pasajes_disponibles))
         except Exception as e:
             current_app.logger.error(f'Unexpected error: {e}')
             return str(e), 500
@@ -470,7 +472,8 @@ def mi_reserva():
         mail = request.args.get('mail')
         duracion = request.args.get('duracion')
         num_transaccion = request.args.get('num_transaccion')
-        
+        pasajes_disponibles = request.args.get('pasajes_disponibles')
+
         try:
             response = requests.get('http://localhost:8080/aeropuertos')
             response.raise_for_status()
@@ -491,9 +494,19 @@ def mi_reserva():
 
         ciudad_origen = aeropuerto_origen[0]['ciudad']
         ciudad_destino = aeropuerto_destino[0]['ciudad']
-
-        # Guardar num_transaccion en la sesión
+        
+        # Guardar en la sesión
         session['num_transaccion'] = num_transaccion
+        session['pasajes_disponibles'] = pasajes_disponibles
+        session['origen'] = origen
+        session['destino'] = destino
+        session['hora_salida'] = hora_salida
+        session['hora_llegada'] = hora_llegada
+        session['duracion'] = duracion
+        session['precio'] = precio
+        session['nro_vuelo'] = nro_vuelo
+
+        
 
         return render_template('mi-reserva.html', origen=origen, destino=destino, nro_vuelo=nro_vuelo, 
                                fecha_salida=fecha_salida, fecha_llegada=fecha_llegada, hora_salida=hora_salida, 
@@ -503,16 +516,44 @@ def mi_reserva():
     
     if request.method == "POST":
         num_transaccion = session.get('num_transaccion')
+        pasajes_disponibles = session.get('pasajes_disponibles')
+        origen = session.get('origen')
+        destino = session.get('destino')
+        hora_salida = session.get('hora_salida')
+        hora_llegada = session.get('hora_llegada')
+        duracion = session.get('duracion')
+        precio = session.get('precio')
+        nro_vuelo = session.get('nro_vuelo')
+
+        datos_modificacion_de_vuelos = {
+            'pasajes_disponibles': str(int(pasajes_disponibles)+1),
+            'codigo_aeropuerto_origen': origen,
+            'codigo_aeropuerto_destino': destino,
+            'hora_salida': hora_salida,
+            'hora_llegada': hora_llegada,
+            'duracion': duracion,
+            'precio': precio,
+            "id_vuelo": nro_vuelo
+        }
 
         if num_transaccion is None:
             current_app.logger.error('num_transaccion is None')
             return 'Error: num_transaccion is None', 400
 
+        #Elimina la transaccion de la tabla transacciones
         try:
             response = requests.delete(f'http://localhost:8080/transacciones/{num_transaccion}')
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             current_app.logger.error(f'Error borrando la transaccion de la base de datos: {e}')
+            return str(e), 500
+        
+        #Modifica la tabla vuelos para sumarle uno a la cantidad de pasajes disponibles
+        try:
+            api_response = requests.patch(f"http://localhost:8080/vuelos/{nro_vuelo}", json=datos_modificacion_de_vuelos)
+            api_response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            current_app.logger.error(f'Error al modificar los vuelos: {e}')
             return str(e), 500
         
         return render_template('reserva-anulada.html')
