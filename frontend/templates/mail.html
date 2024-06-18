@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial, sans-serif; background-color: #ffffff; color: #333333; padding: 20px;">
+
+    <h2 style="color: #FFA07A; text-align: center; border-bottom: 2px solid #FFA07A; padding-bottom: 10px;">
+        ¡Muchas gracias por elegir FIUBA Airlines!
+    </h2>
+    <h2 style="color: #FFA07A; text-align: center; padding-bottom: 10px;">A continuación se detalla su reserva:</h2>
+    
+    <h3 style="color: #FF8C00;">Información del pasajero:</h3>
+    <ul style="list-style-type: none; padding: 0;">
+        <li style="padding: 5px 0;"><strong>Pasajero:</strong> {{apellido}}, {{nombre}}</li>
+        <li style="padding: 5px 0;"><strong>DNI:</strong> {{dni}}</li>
+    </ul>
+    
+    <h3 style="color: #FF8C00;">Información del vuelo:</h3>
+    <ul style="list-style-type: none; padding: 0;">
+        <li style="padding: 5px 0;"><strong>Origen:</strong> {{ciudad_origen}} ({{origen}})</li>
+        <li style="padding: 5px 0;"><strong>Destino:</strong> {{ciudad_destino}} ({{destino}})</li>
+        <li style="padding: 5px 0;"><strong>Número de vuelo:</strong> {{nro_vuelo}}</li>
+        <li style="padding: 5px 0;"><strong>Partida:</strong> {{fecha_salida}} {{hora_salida}} hs</li>
+        <li style="padding: 5px 0;"><strong>Arribo:</strong> {{fecha_llegada}} {{hora_llegada}} hs</li>
+        <li style="padding: 5px 0;"><strong>Duración:</strong> {{duracion}} hs</li>
+        <li style="padding: 5px 0;"><strong>Precio:</strong> ${{precio}}</li>
+    </ul>
+</body>
+</html>

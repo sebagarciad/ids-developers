@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados - Fiuba Airlines{% endblock %}
+
+{% block body %} 
+		
+
+		<!-- end:header-top -->
+	
+		<div class="fh5co-hero">
+			<div class="fh5co-overlay"></div>
+			<div class="fh5co-cover" data-stellar-background-ratio="0.5" style="background-image: url(images/cover_bg_1.jpg);">
+				<div class="desc">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-5 col-md-12">
+								<div class="tabulation animate-box">
+
+								  <!-- Nav tabs -->
+								   <ul class="nav nav-tabs" role="tablist">
+								      <li role="presentation" class="active">
+								      	<a href="#resultados-busqueda" aria-controls="resultados-busqueda" role="tab" data-toggle="tab">{{origen}} - {{destino}}</a>
+								      </li>
+								 
+								   </ul>
+
+								   <!-- Tab panes -->
+									<div class="tab-content">
+										<div role="tabpanel" class="tab-pane active" id="infousuario">
+										   <div class="row">
+											<div class="col-xxs-12 col-xs-6 mt">
+												<section>
+													<label for="class">Desde:</label>
+													<p id="resultado">{{ciudad_origen}} ({{origen}})</p>
+												</section>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt alternate">
+												<section>
+													<label for="class">Hacia:</label>
+													<p id="resultado">{{ciudad_destino}} ({{destino}})</p>
+												</section>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="class">Número de vuelo:</label>
+													<p id="resultado">{{nro_vuelo}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt alternate">
+												<section>
+													<label for="class">Duración:</label>
+													<p id="resultado">{{duracion}}</p>
+												</section>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="date-start">Fecha del vuelo:</label>
+													<p id="resultado">{{fecha}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="date-start">Precio del pasaje:</label>
+													<p id="resultado">${{precio}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<div class="input-field">
+													<label for="date-start">Hora de partida:</label>
+													<p id="resultado">{{hora_salida}}</p>
+												</div>
+											</div>
+											<div class="col-xxs-12 col-xs-6 mt">
+												<section>
+													<label for="class">Hora de arribo:</label>
+													<p id="resultado">{{hora_llegada}}</p>
+												</section>
+											</div>
+											<div class="col-xs-12">
+												<a href="{{ url_for('info_usuario', _external=True)}}"><button type="submit" class="btn btn-primary btn-block" value="Seleccionar vuelo">Seleccionar este vuelo</button></a>
+												</br>
+												<a href="{{ url_for('home', _external=True)}}"><button class="btn btn-primary btn-block">Elegir otra fecha o destino</button></a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- END fh5co-page -->
+
+	</div>
+	<!-- END fh5co-wrapper -->
+
+	<!-- jQuery -->
+
+
+	<script src="{{url_for('static', filename='/js/jquery.min.js', _external=True)}}"></script>
+	<!-- jQuery Easing -->
+	<script src="{{url_for('static', filename='/js/jquery.easing.1.3.js', _external=True)}}"></script>
+	<!-- Bootstrap -->
+	<script src="{{url_for('static', filename='/js/bootstrap.min.js', _external=True)}}"></script>
+	<!-- Waypoints -->
+	<script src="{{url_for('static', filename='/js/jquery.waypoints.min.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/sticky.js', _external=True)}}"></script>
+
+	<!-- Stellar -->
+	<script src="{{url_for('static', filename='/js/jquery.stellar.min.js', _external=True)}}"></script>
+	<!-- Superfish -->
+	<script src="{{url_for('static', filename='/js/hoverIntent.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/superfish.js', _external=True)}}"></script>
+	<!-- Magnific Popup -->
+	<script src="{{url_for('static', filename='/js/jquery.magnific-popup.min.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/magnific-popup-options.js', _external=True)}}"></script>
+	<!-- Date Picker -->
+	<script src="{{url_for('static', filename='/js/bootstrap-datepicker.min.js', _external=True)}}"></script>
+	<!-- CS Select -->
+	<script src="{{url_for('static', filename='/js/classie.js', _external=True)}}"></script>
+	<script src="{{url_for('static', filename='/js/selectFx.js', _external=True)}}"></script>
+	
+	<!-- Main JS -->
+	<script src="{{url_for('static', filename='/js/main.js', _external=True)}}"></script>
+
+	{% endblock %}
+

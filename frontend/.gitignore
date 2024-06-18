@@ -17,8 +17,4 @@ venv/
 .DS_Store
 
 # Ignore other system files
-<<<<<<< HEAD
 Thumbs.db
-=======
-Thumbs.db
->>>>>>> Develop

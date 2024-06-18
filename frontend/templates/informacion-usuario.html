@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Información del Pasajero - Fiuba Airlines{% endblock %}
+
+{% block body %} 
+		
+
+		<!-- end:header-top -->
+	
+		<div class="fh5co-hero">
+			<div class="fh5co-overlay"></div>
+			<div class="fh5co-cover" data-stellar-background-ratio="0.5");">
+				<div class="desc">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-5 col-md-12">
+								<div class="tabulation animate-box">
+
+								  <!-- Nav tabs -->
+								   <ul class="nav nav-tabs" role="tablist">
+								      <li role="presentation" class="active">
+								      	<a href="#info-usuario" aria-controls="info-usuario" role="tab" data-toggle="tab">Informacion del usuario</a>
+								      </li>
+								 
+								   </ul>
+
+								   <!-- Tab panes -->
+									<div class="tab-content">
+									 <div role="tabpanel" class="tab-pane active" id="infousuario">
+										<div class="row">
+											<form action="{{url_for('info_usuario')}}" method="post">
+											<div class="col-sm-12 mt">
+												<section>
+													<label for="class">Nombre:</label>
+													<input type="text" id="nombre" name="nombre" placeholder="Nombre">
+													{% if errores_validacion and errores_validacion.get("nombre") %}
+														<div class="alert alert-danger">{{ errores_validacion.get("nombre") }}</div>
+													{% endif %}
+												</section>
+											</div>
+											<div class="col-sm-12 mt">
+												<section>
+													<label for="class">Apellido:</label>
+													<input type="text" id="apellido" name="apellido" placeholder="Apellido">
+													{% if errores_validacion and errores_validacion.get("apellido") %}
+														<div class="alert alert-danger">{{ errores_validacion.get("apellido") }}</div>
+													{% endif %}
+												</section>
+											</div>
+											<div class="col-sm-12 mt">
+												<section>
+													<label for="class">DNI:</label>
+													<input type="text" id="dni" name="dni" placeholder="12345678">
+													{% if errores_validacion and errores_validacion.get("dni") %}
+														<div class="alert alert-danger">{{ errores_validacion.get("dni") }}</div>
+													{% endif %}
+												</section>
+											</div>
+											<div class="col-sm-12 mt">
+												<section>
+													<label for="class">Correo electronico:</label>
+													<input type="text" id="mail" name="mail" placeholder="ejemplo@gmail.com">
+													{% if errores_validacion and errores_validacion.get("mail") %}
+														<div class="alert alert-danger">{{ errores_validacion.get("mail") }}</div>
+													{% endif %}
+												</section>
+											</div>
+											<div class="col-xs-12">
+												<input type="submit" class="btn btn-primary btn-block" value="Continuar">
+											</div>
+										</div>
+									 </div>
+
+									 
+									 </div>
+									</div>
+
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		
+
+	</div>
+	<!-- END fh5co-page -->
+
+	</div>
+	<!-- END fh5co-wrapper -->
+
+	<!-- jQuery -->
+
+
+	<script src="static/js/jquery.min.js"></script>
+	<!-- jQuery Easing -->
+	<script src="static/js/jquery.easing.1.3.js"></script>
+	<!-- Bootstrap -->
+	<script src="static/js/bootstrap.min.js"></script>
+	<!-- Waypoints -->
+	<script src="static/js/jquery.waypoints.min.js"></script>
+	<script src="static/js/sticky.js"></script>
+
+	<!-- Stellar -->
+	<script src="static/js/jquery.stellar.min.js"></script>
+	<!-- Superfish -->
+	<script src="static/js/hoverIntent.js"></script>
+	<script src="static/js/superfish.js"></script>
+	<!-- Magnific Popup -->
+	<script src="static/js/jquery.magnific-popup.min.js"></script>
+	<script src="static/js/magnific-popup-options.js"></script>
+	<!-- Date Picker -->
+	<script src="static/js/bootstrap-datepicker.min.js"></script>
+	<!-- CS Select -->
+	<script src="static/js/classie.js"></script>
+	<script src="static/js/selectFx.js"></script>
+	
+	<!-- Main JS -->
+	<script src="static/js/main.js"></script>
+
+	{% endblock %}
+
