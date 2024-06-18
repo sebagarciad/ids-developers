@@ -4,7 +4,7 @@
 
 ### Fiuba Airlines
 
-El proyecto Fiuba Airlines se basa en un diseño web de una aerolínea ubicada en el país de Argentina que fue utilizado como entrega para el Trabajo Práctico de la materia Introducción al Desarrollo de Software en la facultad de ingenieria de la UBA. Este proyecto busca otorgar las herramientas necesarias para poder realizar la reserva de vuelos nacionales.
+El proyecto Fiuba Airlines se basa en la implementacion de una aplicacion web de una aerolínea ubicada en el país de Argentina, que fue utilizado como entrega para el Trabajo Práctico de la materia Introducción al Desarrollo de Software en la Facultad de Ingenieria de la UBA. Este proyecto busca otorgar las herramientas necesarias para poder realizar la reserva de vuelos nacionales.
 
 #### Características
 
