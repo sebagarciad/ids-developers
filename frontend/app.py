@@ -94,15 +94,15 @@ def resultados_busqueda():
         ]
 
         if not vuelos_filtrados:
-            current_app.logger.info('No vuelos found matching the criteria')
+            current_app.logger.info('No se encontraron vuelos que coincidan')
             return render_template('no-resultados.html')
         
         if not aeropuerto_origen:
-            current_app.logger.info('No aeropuerto origen found matching the criteria')
+            current_app.logger.info('No se encontro el aeropuerto de origen')
             return render_template('no-resultados.html')
         
         if not aeropuerto_destino:
-            current_app.logger.info('No aeropuerto destino found matching the criteria')
+            current_app.logger.info('No se encontro el aeropuerto de destino')
             return render_template('no-resultados.html')
 
         vuelo = vuelos_filtrados[0]
@@ -135,6 +135,10 @@ def resultados_busqueda():
         session['codigo_aeropuerto_destino'] = codigo_aeropuerto_destino 
         session['ciudad_origen'] = ciudad_origen
         session['ciudad_destino'] = ciudad_destino
+
+        if not pasajes_disponibles:
+            current_app.logger.info('No hay pasajes disponibles')
+            return render_template('no-resultados.html')
 
         return render_template(
         'resultados-de-busqueda.html', 
@@ -172,13 +176,13 @@ def info_usuario():
         if errores_validacion:
             return render_template('informacion-usuario.html', errores_validacion=errores_validacion, nombre=nombre, apellido=apellido, dni=dni, mail=mail)
         
-        # Store user data in session
+        # Almacenar datos de usuario en una user session
         session['nombre'] = nombre
         session['apellido'] = apellido
         session['dni'] = dni
         session['mail'] = mail
 
-        # Create user data payload to send to API
+        # Diccionario para enviar datos a la API
         datos_usuarios = {
             "dni": dni,
             "nombre": nombre,
@@ -186,7 +190,7 @@ def info_usuario():
             "mail": mail
         }
 
-        # Send user data to API
+        # Envio de datos a la API
         try:
             api_response = requests.post("http://localhost:8080/usuarios", json=datos_usuarios)
             api_response.raise_for_status()
@@ -194,7 +198,6 @@ def info_usuario():
             current_app.logger.error(f'Error al enviar datos de usuario al API: {e}')
             return str(e), 500
 
-        # If user data was successfully sent, proceed to pago
         if api_response.status_code == 201 or api_response.status_code == 200:
             return redirect(url_for("pago"))
         else:
@@ -261,7 +264,6 @@ def pago():
             "id_vuelo": nro_vuelo
         }
 
-        # Send user data to API
         try:
             api_response = requests.post("http://localhost:8080/transacciones", json=datos_transaccion)
             api_response.raise_for_status()
@@ -352,7 +354,7 @@ def buscar_reserva():
             response.raise_for_status()
             reserva_data = response.json()
         except requests.exceptions.RequestException as e:
-            current_app.logger.error(f'Error fetching transacciones: {e}')
+            current_app.logger.error(f'Error sl budvst transacciones: {e}')
             return str(e), 500
 
         try:
@@ -360,7 +362,7 @@ def buscar_reserva():
             response2.raise_for_status()
             vuelos_data = response2.json()
         except requests.exceptions.RequestException as e:
-            current_app.logger.error(f'Error fetching vuelos: {e}')
+            current_app.logger.error(f'Error al buscar vuelos: {e}')
             return str(e), 500
         
         try:
@@ -368,7 +370,7 @@ def buscar_reserva():
             response3.raise_for_status()
             usuarios_data = response3.json()
         except requests.exceptions.RequestException as e:
-            current_app.logger.error(f'Error fetching usuarios: {e}')
+            current_app.logger.error(f'Error al buscar usuarios: {e}')
             return str(e), 500
         
         try:
@@ -376,7 +378,7 @@ def buscar_reserva():
             response.raise_for_status()
             aeropuertos_data = response.json()
         except requests.exceptions.RequestException as e:
-            current_app.logger.error(f'Error fetching vuelos: {e}')
+            current_app.logger.error(f'Error al buscar aeropuertos: {e}')
             return str(e), 500
 
         try:
@@ -398,15 +400,15 @@ def buscar_reserva():
 
             
             if not reserva:
-                current_app.logger.info('No reserva found matching the criteria')
+                current_app.logger.info('No se encontro la reserva')
                 return render_template('no-reserva.html')
             
             if not vuelo_filtrado:
-                current_app.logger.info('No vuelo found matching the criteria')
+                current_app.logger.info('No se encontro el vuelo')
                 return render_template('no-reserva.html')
             
             if not usuario_filtrado:
-                current_app.logger.info('No usuario found matching the criteria')
+                current_app.logger.info('No se encontro el usuario')
                 return render_template('no-reserva.html')
             
 
